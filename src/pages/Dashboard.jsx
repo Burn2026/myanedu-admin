@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Existing Components
+// Existing Components (ရှိပြီးသား Component များ)
 import PaymentVerification from '../components/PaymentVerification';
 import StudentManagement from '../components/StudentManagement'; 
 import ExamManagement from '../components/ExamManagement'; 
 import LessonManagement from '../components/LessonManagement';
-
-// (New Feature) Discussion Manager Component Import
 import DiscussionManager from '../components/DiscussionManager'; 
+
+// (New Feature) Course Management Component Import (အသစ်ထပ်ထည့်လိုက်ပါသည်)
+import CourseManagement from '../components/CourseManagement'; 
 
 import '../App.css';
 
@@ -48,6 +49,12 @@ function Dashboard() {
             <div className={`menu-item ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
               📊 Dashboard Stats
             </div>
+            
+            {/* (NEW) Manage Courses Tab (အသစ်ထည့်လိုက်သော မီနူး) */}
+            <div className={`menu-item ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => setActiveTab('courses')}>
+              📚 Manage Courses
+            </div>
+
             <div className={`menu-item ${activeTab === 'students' ? 'active' : ''}`} onClick={() => setActiveTab('students')}>
               👨‍🎓 Manage Students
             </div>
@@ -61,7 +68,6 @@ function Dashboard() {
               📺 Manage Lessons
             </div>
             
-            {/* (NEW) Discussion Tab */}
             <div className={`menu-item ${activeTab === 'discuss' ? 'active' : ''}`} onClick={() => setActiveTab('discuss')}>
               💬 Discussions
             </div>
@@ -98,6 +104,11 @@ function Dashboard() {
             </div>
           )}
 
+          {/* (NEW) Courses Tab Content */}
+          {activeTab === 'courses' && (
+             <CourseManagement /> 
+          )}
+
           {/* Students Tab */}
           {activeTab === 'students' && (
              <StudentManagement /> 
@@ -118,7 +129,7 @@ function Dashboard() {
              <LessonManagement /> 
           )}
 
-          {/* (NEW) Discussions Tab */}
+          {/* Discussions Tab */}
           {activeTab === 'discuss' && (
              <DiscussionManager /> 
           )}
