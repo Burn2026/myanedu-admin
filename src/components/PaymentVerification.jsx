@@ -67,7 +67,8 @@ function PaymentVerification() {
                 <th className="p-3 text-sm font-semibold text-left text-gray-600">Date</th>
                 <th className="p-3 text-sm font-semibold text-left text-gray-600">Student</th>
                 <th className="p-3 text-sm font-semibold text-left text-gray-600">Course</th>
-                <th className="p-3 text-sm font-semibold text-left text-gray-600">Amount</th>
+                {/* Header Name ပြောင်းထားသည် */}
+                <th className="p-3 text-sm font-semibold text-left text-gray-600">Payment Info</th> 
                 <th className="p-3 text-sm font-semibold text-center text-gray-600">Receipt</th>
                 <th className="p-3 text-sm font-semibold text-center text-gray-600">Status</th>
                 <th className="p-3 text-sm font-semibold text-center text-gray-600">Actions</th>
@@ -87,9 +88,24 @@ function PaymentVerification() {
                         <div className="font-medium">{p.course_name}</div>
                         <div className="text-xs text-gray-500">{p.batch_name}</div>
                     </td>
-                    <td className="p-3 font-bold text-blue-600">
-                        {Number(p.amount).toLocaleString()} Ks
-                        <div className="text-xs text-gray-400 font-normal">{p.payment_method}</div>
+                    
+                    {/* --- Payment Info Column (Updated) --- */}
+                    <td className="p-3">
+                        <div className="font-bold text-blue-600">{Number(p.amount).toLocaleString()} Ks</div>
+                        <div className="flex flex-col gap-1 mt-1">
+                            {/* Payment Method */}
+                            <div className="text-xs text-gray-600 font-medium bg-gray-100 px-2 py-0.5 rounded w-fit">
+                                {p.payment_method}
+                            </div>
+                            {/* Transaction ID ပြမည့်နေရာ */}
+                            {p.transaction_id ? (
+                                <div className="text-xs text-gray-500">
+                                    Trans ID: <span className="font-mono text-gray-800 font-bold">{p.transaction_id}</span>
+                                </div>
+                            ) : (
+                                <div className="text-xs text-gray-400 italic">No Trans ID</div>
+                            )}
+                        </div>
                     </td>
                     
                     <td className="p-3 text-center">
