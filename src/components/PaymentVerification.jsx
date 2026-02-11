@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
 
+// Heroicons မှ အပိတ် Icon ကို သုံးပါမည် (SVG)
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
 function PaymentVerification() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,18 +35,19 @@ function PaymentVerification() {
 
   // ၂။ Verify / Reject လုပ်ဆောင်ချက်များ
   const handleStatusChange = async (id, status) => {
-    if(!window.confirm(`Are you sure you want to ${status} this payment?`)) return;
+    const actionText = status === 'verified' ? 'Verify (အတည်ပြု)' : 'Reject (ပယ်ဖျက်)';
+    if(!window.confirm(`Are you sure you want to ${actionText} this payment?`)) return;
 
     try {
       const res = await fetch(`${API_URL}/admin/payments/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }) // 'verified' or 'rejected'
+        body: JSON.stringify({ status })
       });
 
       if (res.ok) {
         alert(`Payment ${status} successfully!`);
-        fetchPayments(); // Data ပြန်စစ်မည်
+        fetchPayments();
       } else {
         alert("Action failed");
       }
@@ -50,83 +58,97 @@ function PaymentVerification() {
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">💰 Verify Payments (ငွေလွှဲ စစ်ဆေးရန်)</h2>
+    <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+        <span>💰</span> Verify Payments (ငွေလွှဲ စစ်ဆေးရန်)
+      </h2>
 
       {loading ? (
-        <p className="text-center text-gray-500">Loading payments...</p>
+        <div className="text-center py-10 text-gray-500 animate-pulse">Loading payments data...</div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2">Date</th>
-                <th className="border p-2">Student</th>
-                <th className="border p-2">Course / Batch</th>
-                <th className="border p-2">Amount</th>
-                <th className="border p-2">Method</th>
-                <th className="border p-2">Receipt</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Actions</th>
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left text-gray-600">Date</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left text-gray-600">Student</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left text-gray-600">Course Info</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-left text-gray-600">Amount</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-center text-gray-600">Receipt</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-center text-gray-600">Status</th>
+                <th className="p-3 text-sm font-semibold tracking-wide text-center text-gray-600">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {payments.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="text-center p-4 text-gray-500">No pending payments.</td>
+                  <td colSpan="7" className="text-center p-8 text-gray-500">No payment records found.</td>
                 </tr>
               ) : (
                 payments.map((p) => (
-                  <tr key={p.id} className="text-center hover:bg-gray-50">
-                    <td className="border p-2 text-sm text-gray-600">
+                  <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="p-3 text-sm text-gray-600 whitespace-nowrap">
                       {new Date(p.payment_date).toLocaleDateString()}
+                      <div className="text-xs text-gray-400">{new Date(p.payment_date).toLocaleTimeString()}</div>
                     </td>
-                    <td className="border p-2 font-semibold">{p.student_name}<br/><span className="text-xs text-gray-500">{p.phone_primary}</span></td>
-                    <td className="border p-2 text-sm">{p.course_name} - {p.batch_name}</td>
-                    <td className="border p-2 font-bold text-blue-600">{Number(p.amount).toLocaleString()} Ks</td>
-                    <td className="border p-2">{p.payment_method}</td>
+                    <td className="p-3">
+                        <div className="font-semibold text-gray-800">{p.student_name}</div>
+                        <div className="text-xs text-blue-600">{p.phone_primary}</div>
+                    </td>
+                    <td className="p-3 text-sm">
+                        <div className="font-medium">{p.course_name}</div>
+                        <div className="text-xs text-gray-500 bg-gray-100 inline-block px-2 py-0.5 rounded mt-1">{p.batch_name}</div>
+                    </td>
+                    <td className="p-3 font-bold text-blue-600 whitespace-nowrap">
+                        {Number(p.amount).toLocaleString()} Ks
+                        <div className="text-xs text-gray-500 font-normal">{p.payment_method}</div>
+                    </td>
                     
                     {/* --- Receipt Image Button --- */}
-                    <td className="border p-2">
+                    <td className="p-3 text-center">
                         {p.receipt_image ? (
                             <button 
                                 onClick={() => setSelectedImage(p.receipt_image)}
-                                className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded text-sm"
+                                className="flex items-center gap-1 mx-auto bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1.5 rounded-md text-sm transition-colors font-medium"
                             >
                                 📸 View
                             </button>
                         ) : (
-                            <span className="text-gray-400 text-sm">No Image</span>
+                            <span className="text-gray-400 text-xs">No Image</span>
                         )}
                     </td>
 
                     {/* Status Badge */}
-                    <td className="border p-2">
-                      <span className={`px-2 py-1 rounded text-xs font-bold 
-                        ${p.status === 'verified' ? 'bg-green-100 text-green-700' : 
-                          p.status === 'rejected' ? 'bg-red-100 text-red-700' : 
-                          'bg-yellow-100 text-yellow-700'}`}>
-                        {p.status.toUpperCase()}
+                    <td className="p-3 text-center">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider
+                        ${p.status === 'verified' ? 'bg-green-100 text-green-800' : 
+                          p.status === 'rejected' ? 'bg-red-100 text-red-800' : 
+                          'bg-yellow-100 text-yellow-800 animate-pulse'}`}>
+                        {p.status}
                       </span>
                     </td>
 
                     {/* Actions */}
-                    <td className="border p-2">
-                        {p.status === 'pending' && (
+                    <td className="p-3 text-center">
+                        {p.status === 'pending' ? (
                             <div className="flex justify-center gap-2">
                                 <button 
                                     onClick={() => handleStatusChange(p.id, 'verified')}
-                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+                                    title="Verify Payment"
+                                    className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition shadow-sm"
                                 >
-                                    Verify
+                                    ✅
                                 </button>
                                 <button 
                                     onClick={() => handleStatusChange(p.id, 'rejected')}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                                    title="Reject Payment"
+                                    className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition shadow-sm"
                                 >
-                                    Reject
+                                    ❌
                                 </button>
                             </div>
+                        ) : (
+                            <span className="text-gray-400 text-sm">-</span>
                         )}
                     </td>
                   </tr>
@@ -137,27 +159,38 @@ function PaymentVerification() {
         </div>
       )}
 
-      {/* --- Image Modal (ဓာတ်ပုံကြီးပြမည့်နေရာ) --- */}
+      {/* --- Premium Image Modal (ပြင်ဆင်ထားသော အပိုင်း) --- */}
       {selectedImage && (
         <div 
-            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-            onClick={() => setSelectedImage(null)} // အပြင်ဘက်နှိပ်ရင် ပိတ်မည်
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
+            onClick={() => setSelectedImage(null)} // နောက်ခံကိုနှိပ်ရင် ပိတ်မည်
         >
-            <div className="bg-white p-2 rounded shadow-lg max-w-2xl w-full relative">
-                {/* Close Button */}
-                <button 
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute top-[-15px] right-[-15px] bg-red-600 text-white w-8 h-8 rounded-full font-bold shadow hover:bg-red-700"
-                >
-                    ✕
-                </button>
+            {/* Modal Container */}
+            <div 
+                className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                onClick={(e) => e.stopPropagation()} // Modal ကိုနှိပ်ရင် မပိတ်အောင် တားမည်
+            >
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+                    <h3 className="text-lg font-bold text-gray-800">📄 Payment Receipt Evidence</h3>
+                    <button 
+                        onClick={() => setSelectedImage(null)}
+                        className="text-gray-400 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-full transition-colors focus:outline-none"
+                    >
+                        <CloseIcon />
+                    </button>
+                </div>
                 
-                <img 
-                    src={selectedImage} 
-                    alt="Receipt" 
-                    className="w-full h-auto rounded"
-                    style={{ maxHeight: '80vh', objectFit: 'contain' }}
-                />
+                {/* Modal Body (Image Container) */}
+                <div className="p-4 bg-gray-50 flex justify-center items-center">
+                    <img 
+                        src={selectedImage} 
+                        alt="Receipt" 
+                        className="rounded-lg shadow-sm object-contain"
+                        // ဓာတ်ပုံသည် မျက်နှာပြင်အမြင့်၏ 75% ထက်မကျော်စေရ၊ အချိုးအစားမပျက်စေရ
+                        style={{ maxHeight: '75vh', maxWidth: '100%', width: 'auto' }} 
+                    />
+                </div>
             </div>
         </div>
       )}
