@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './LessonManagement.css'; // ✅ CSS ဖိုင်အသစ် ချိတ်ဆက်ထားသည်
 
 function LessonManagement() {
   const [batches, setBatches] = useState([]);
@@ -79,19 +80,29 @@ function LessonManagement() {
     fetchLessons();
   };
 
-  return (
-    <div>
-      <h2 className="dashboard-title">📺 Upload Video Lessons</h2>
+  // Helper Function for File Name
+  const extractFileName = (url) => {
+    if (!url) return "Unknown File";
+    const parts = url.split('/');
+    const fullFileName = parts[parts.length - 1];
+    // Remove query params or extra string if needed, keeping it simple here
+    return fullFileName;
+  };
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+  return (
+    <div className="lm-container">
+      <h2 className="lm-title">
+        <span>📺</span> Upload Video Lessons
+      </h2>
+
+      <div className="lm-grid">
         
-        {/* --- Form --- */}
-        <div>
-          <div className="table-card" style={{ background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-            <h3 style={{ marginTop: 0, color: '#334155' }}>Step 1: Select Class</h3>
+        {/* --- Left: Form Section --- */}
+        <div className="lm-card">
+          <div className="lm-card-header">
+            <h3>Step 1: Select Class</h3>
             <select 
-                className="search-input" 
-                style={{ width: '100%', marginBottom: '20px' }}
+                className="lm-select" 
                 value={selectedBatch}
                 onChange={e => setSelectedBatch(e.target.value)}
             >
@@ -100,71 +111,99 @@ function LessonManagement() {
                     <option key={b.id} value={b.id}>{b.course_name} - {b.batch_name}</option>
                 ))}
             </select>
+          </div>
 
-            <h3 style={{ marginTop: '20px', color: '#334155' }}>Step 2: Upload Video</h3>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                <div>
-                    <label style={{fontWeight: 'bold', fontSize: '12px'}}>Lesson Title</label>
-                    <input required className="search-input" style={{width: '100%'}} placeholder="e.g. Chapter 1"
-                        value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+          <div className="lm-card-body">
+            <h3>Step 2: Upload Video</h3>
+            <form onSubmit={handleSubmit} className="lm-form">
+                
+                <div className="lm-form-group">
+                    <label>Lesson Title <span>*</span></label>
+                    <input 
+                        required 
+                        type="text"
+                        className="lm-input" 
+                        placeholder="e.g. Chapter 1: Introduction"
+                        value={formData.title} 
+                        onChange={e => setFormData({...formData, title: e.target.value})} 
+                    />
                 </div>
                 
-                <div>
-                    <label style={{fontWeight: 'bold', fontSize: '12px'}}>Select Video File (MP4)</label>
+                <div className="lm-form-group">
+                    <label>Select Video File (MP4, MKV) <span>*</span></label>
                     <input 
                         required 
                         id="videoInput"
                         type="file" 
                         accept="video/*"
-                        className="search-input" 
-                        style={{width: '100%', padding: '10px'}} 
+                        className="lm-file-input" 
                         onChange={e => setVideoFile(e.target.files[0])}
                     />
                 </div>
 
-                <div>
-                    <label style={{fontWeight: 'bold', fontSize: '12px'}}>Description</label>
-                    <textarea className="search-input" style={{width: '100%'}} rows="4"
-                        value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+                <div className="lm-form-group">
+                    <label>Description (Optional)</label>
+                    <textarea 
+                        className="lm-input lm-textarea" 
+                        rows="3"
+                        placeholder="Brief summary of the lesson..."
+                        value={formData.description} 
+                        onChange={e => setFormData({...formData, description: e.target.value})} 
+                    />
                 </div>
 
                 <button 
                     type="submit" 
-                    className="search-btn" 
+                    className="lm-btn-submit" 
                     disabled={!selectedBatch || uploading}
-                    style={{ opacity: uploading ? 0.7 : 1 }}
                 > 
-                    {uploading ? "Uploading Video... (Please Wait)" : "Upload Lesson"} 
+                    {uploading ? "⏳ Uploading Video... (Please Wait)" : "📤 Upload Lesson"} 
                 </button>
             </form>
           </div>
         </div>
 
-        {/* --- List --- */}
-        <div>
-           <h3 style={{ marginTop: 0 }}>Existing Lessons</h3>
-           {!selectedBatch && <p style={{color: '#64748b'}}>Please select a class to see lessons.</p>}
+        {/* --- Right: List Section --- */}
+        <div className="lm-list-section">
+           <div className="lm-list-header">
+               <h3>Existing Lessons</h3>
+               <span className="lm-badge">{lessons.length} Lessons</span>
+           </div>
            
-           {selectedBatch && (
-             loading ? <p>Loading...</p> : (
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                 {lessons.length === 0 && <p style={{color: '#64748b'}}>No lessons uploaded yet.</p>}
-                 {lessons.map((lesson, idx) => (
-                    <div key={lesson.id} style={{ background: 'white', padding: '15px', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                            <div style={{fontWeight: 'bold', color: '#2563eb'}}>Lesson {idx + 1}: {lesson.title}</div>
-                            <div style={{fontSize: '11px', color: '#64748b', marginTop: '5px'}}>
-                                📁 {lesson.video_url.split('/').pop()} 
+           <div className="lm-list-body">
+               {!selectedBatch && (
+                   <div className="lm-empty-state">
+                       Please select a class from the left to see lessons.
+                   </div>
+               )}
+               
+               {selectedBatch && (
+                 loading ? <div className="lm-loading">Loading lessons...</div> : (
+                   <div className="lm-lessons-container">
+                     {lessons.length === 0 && (
+                         <div className="lm-empty-state">No lessons uploaded for this class yet.</div>
+                     )}
+                     
+                     {lessons.map((lesson, idx) => (
+                        <div key={lesson.id} className="lm-lesson-item">
+                            <div className="lm-lesson-info">
+                                <div className="lm-lesson-title">
+                                    <span className="lm-lesson-num">{idx + 1}</span>
+                                    {lesson.title}
+                                </div>
+                                <div className="lm-lesson-file">
+                                    <span className="lm-icon">📁</span> {extractFileName(lesson.video_url)} 
+                                </div>
                             </div>
+                            <button onClick={() => handleDelete(lesson.id)} className="lm-btn-delete" title="Delete Lesson">
+                                Delete
+                            </button>
                         </div>
-                        <button onClick={() => handleDelete(lesson.id)} style={{ background: '#fee2e2', color: '#991b1b', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer', fontSize: '12px' }}>
-                            Delete
-                        </button>
-                    </div>
-                 ))}
-               </div>
-             )
-           )}
+                     ))}
+                   </div>
+                 )
+               )}
+           </div>
         </div>
 
       </div>

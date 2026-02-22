@@ -1,0 +1,314 @@
+/* src/components/LessonManagement.css */
+
+.lm-container {
+  padding: 10px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.lm-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Layout Grid */
+.lm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+
+/* Card Styles */
+.lm-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.lm-card-header {
+  background: #f8fafc;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.lm-card-header h3, .lm-card-body h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.lm-select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background-color: white;
+  cursor: pointer;
+  outline: none;
+  transition: 0.2s;
+}
+
+.lm-select:focus {
+  border-color: #3b82f6;
+}
+
+/* Form Styles */
+.lm-card-body {
+  padding: 20px;
+}
+
+.lm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lm-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.lm-form-group label span {
+  color: #ef4444;
+}
+
+.lm-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: 0.2s;
+}
+
+.lm-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.lm-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.lm-file-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #475569;
+  background: #f8fafc;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.lm-btn-submit {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lm-btn-submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.lm-btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* List Section */
+.lm-list-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Stretch to match form height */
+  min-height: 400px;
+}
+
+.lm-list-header {
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lm-list-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.lm-badge {
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.lm-list-body {
+  padding: 20px;
+  flex: 1;
+  background: #f8fafc;
+}
+
+.lm-empty-state {
+  text-align: center;
+  color: #64748b;
+  padding: 40px 20px;
+  font-size: 14px;
+  background: white;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+.lm-loading {
+  text-align: center;
+  color: #2563eb;
+  font-weight: 600;
+  padding: 20px;
+}
+
+.lm-lessons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lm-lesson-item {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.lm-lesson-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.lm-lesson-info {
+  flex: 1;
+  min-width: 0; /* Important for text truncation */
+}
+
+.lm-lesson-title {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 15px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lm-lesson-num {
+  background: #2563eb;
+  color: white;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.lm-lesson-file {
+  font-size: 12px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lm-icon {
+  margin-right: 4px;
+}
+
+.lm-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.lm-btn-delete:hover {
+  background: #fecaca;
+}
+
+/* =========================================
+   📱 MOBILE RESPONSIVE
+   ========================================= */
+@media screen and (max-width: 992px) {
+  .lm-grid {
+    grid-template-columns: 1fr; /* Stack form and list vertically */
+  }
+
+  .lm-list-section {
+    min-height: auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .lm-lesson-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .lm-btn-delete {
+    width: 100%;
+    padding: 10px;
+  }
+}
