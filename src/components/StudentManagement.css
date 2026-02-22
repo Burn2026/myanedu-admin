@@ -38,7 +38,7 @@
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  max-width: 100%; /* Prevent horizontal scroll */
+  max-width: 100%; /* ✅ မျက်နှာပြင်ပြည့်မသွားအောင် တားပေးသည် */
 }
 
 /* Table Desktop Styles */
@@ -79,7 +79,8 @@
   font-size: 12px;
   font-weight: 700;
   display: inline-block;
-  word-break: break-all; /* ✅ စာလုံးအရှည်ကြီးကို ချိုးပစ်ရန် */
+  word-break: break-all; 
+  white-space: normal;
 }
 
 /* Action Buttons */
@@ -222,7 +223,7 @@
 }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE 
+   📱 MOBILE RESPONSIVE (FIXED OVERFLOW)
    ========================================= */
 @media screen and (max-width: 768px) {
   .sm-table thead {
@@ -246,11 +247,13 @@
 
   .sm-table td {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* ✅ ဘယ်ဘက်မှ စတင်စီမည် */
     align-items: flex-start;
     padding: 12px 10px;
     border-bottom: 1px solid #f1f5f9;
-    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* ✅ ဘေးသို့ပြဲထွက်ခြင်းကို တားမည် */
   }
 
   .sm-table td::before {
@@ -260,23 +263,25 @@
     font-size: 12px;
     text-transform: uppercase;
     flex-shrink: 0;
-    width: 70px; /* ✅ Label များကို အချိုးညီစေရန် */
+    width: 80px; /* ✅ Label ကို Width အသေသတ်မှတ်ထားမည် */
     text-align: left;
+    margin-right: 10px;
   }
 
-  /* ✅ ဤအပိုင်းသည် စာလုံးအရှည်များကို အလိုအလျောက် အောက်ဆင်းစေသည့် နေရာဖြစ်သည် */
+  /* ✅ စာလုံးအရှည်ကြီးများကို အတင်းချိုးချမည့် အဓိကနေရာ (CRITICAL FIX) */
   .sm-td-value {
     flex: 1;
     min-width: 0; 
-    word-break: break-word;
-    overflow-wrap: break-word;
-    text-align: right;
+    width: 100%;
+    word-break: break-all; /* ✅ ID အရှည်ကြီးကို Space မလိုဘဲ ချိုးချမည် */
+    overflow-wrap: anywhere;
+    text-align: left; /* ✅ ဖတ်ရလွယ်အောင် ဘယ်ဘက်သို့ ကပ်ထားမည် */
   }
 
   .sm-action-group {
     display: flex;
-    justify-content: flex-end;
-    flex-wrap: wrap; /* ✅ Button များ နေရာမဆံ့ပါက အောက်ဆင်းရန် */
+    justify-content: flex-start;
+    flex-wrap: wrap; 
     gap: 8px;
   }
 
