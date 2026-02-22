@@ -185,12 +185,13 @@ function LessonManagement() {
                 </div>
                 
                 <div className="lm-form-group">
-                    <label>Select Video File (MP4, MKV) <span>*</span></label>
+                    <label>Select Video File (MP4, MKV, MOV) <span>*</span></label>
+                    {/* ✅ FIX: .mov ဖိုင်များကို ဖုန်းမှ ရွေးချယ်နိုင်ရန် ပြင်ဆင်ထားပါသည် */}
                     <input 
                         required 
                         id="videoInput"
                         type="file" 
-                        accept="video/*"
+                        accept="video/mp4,video/x-m4v,video/*,.mkv,.mov" 
                         className="lm-file-input" 
                         onChange={e => setVideoFile(e.target.files[0])}
                         disabled={uploading}
