@@ -44,7 +44,7 @@ function PaymentVerification() {
 
       if (res.ok) {
         alert(`Payment has been successfully ${status}!`);
-        fetchPayments(); // အပြောင်းအလဲဖြစ်သွားတာကို ချက်ချင်း Refresh လုပ်မည်
+        fetchPayments();
       } else {
         alert("Failed to update status.");
       }
@@ -53,7 +53,6 @@ function PaymentVerification() {
     }
   };
 
-  // ✅ (NEW) Image URL ကို Cloudinary နှင့် Local အလိုအလျောက် ခွဲခြားပေးမည့် Function
   const getImageUrl = (path) => {
     if (!path || path === "null" || path === "undefined") return null;
     let cleanPath = String(path).trim().replace(/\\/g, '/');
@@ -67,8 +66,9 @@ function PaymentVerification() {
   };
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+    // ✅ (Responsive) မျက်နှာပြင်ပြည့်မသွားအောင် max-w-7xl သတ်မှတ်ထားသည်
+    <div className="p-4 md:p-6 bg-white rounded-xl shadow-sm border border-gray-100 max-w-7xl mx-auto">
+      <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800 flex items-center gap-2">
         <span>💰</span> Verify Payments
       </h2>
 
@@ -77,9 +77,12 @@ function PaymentVerification() {
       ) : payments.length === 0 ? (
         <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-lg">No payment records found.</div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-50">
+        // ✅ (Responsive) ဖုန်းတွင် Table မဟုတ်ဘဲ Block အနေဖြင့် ပြမည်
+        <div className="rounded-lg md:border md:border-gray-200">
+          <table className="w-full border-collapse block md:table">
+            
+            {/* Desktop တွင်သာ Table Header ကို ပြမည် */}
+            <thead className="hidden md:table-header-group bg-gray-50">
               <tr>
                 <th className="p-3 text-sm font-semibold text-left text-gray-600">Date</th>
                 <th className="p-3 text-sm font-semibold text-left text-gray-600">Student</th>
@@ -90,38 +93,59 @@ function PaymentVerification() {
                 <th className="p-3 text-sm font-semibold text-center text-gray-600">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            
+            <tbody className="block md:table-row-group divide-y-0 md:divide-y divide-gray-100">
               {payments.map((p) => (
-                <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                   <td className="p-3 text-sm text-gray-600">
-                      {new Date(p.payment_date).toLocaleDateString()}
-                    </td>
-                    <td className="p-3">
-                        <div className="font-semibold text-gray-800">{p.student_name}</div>
-                        <div className="text-xs text-blue-600 font-mono mt-0.5">{p.phone_primary}</div>
-                    </td>
-                    <td className="p-3 text-sm">
-                        <div className="font-medium text-gray-800">{p.course_name}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{p.batch_name}</div>
+                // ✅ ဖုန်းတွင် Card ပုံစံပြောင်းမည် (border, shadow, margin များဖြင့်)
+                <tr key={p.id} className="block md:table-row bg-white border border-gray-200 md:border-none rounded-xl md:rounded-none mb-4 md:mb-0 shadow-sm md:shadow-none hover:bg-gray-50 transition-colors">
+                   
+                    {/* Date */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:table-cell border-b md:border-none border-gray-100 text-sm text-gray-600">
+                      <span className="font-bold text-gray-500 md:hidden">Date</span>
+                      <span>{new Date(p.payment_date).toLocaleDateString()}</span>
                     </td>
                     
-                    <td className="p-3">
-                        <div className="font-bold text-blue-600">{Number(p.amount).toLocaleString()} Ks</div>
-                        <div className="flex flex-col gap-1 mt-1">
-                            <div className="text-[11px] font-bold text-gray-600 uppercase tracking-wider bg-gray-200 px-2 py-0.5 rounded w-fit">
-                                {p.payment_method}
-                            </div>
-                            {p.transaction_id ? (
-                                <div className="text-[11px] text-gray-500 mt-0.5">
-                                    TID: <span className="font-mono text-gray-800 font-bold">{p.transaction_id}</span>
-                                </div>
-                            ) : (
-                                <div className="text-[11px] text-gray-400 italic mt-0.5">No Trans ID</div>
-                            )}
+                    {/* Student */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:table-cell border-b md:border-none border-gray-100">
+                        <span className="font-bold text-gray-500 md:hidden">Student</span>
+                        <div className="text-right md:text-left">
+                            <div className="font-semibold text-gray-800">{p.student_name}</div>
+                            <div className="text-xs text-blue-600 font-mono mt-0.5">{p.phone_primary}</div>
                         </div>
                     </td>
                     
-                    <td className="p-3 text-center">
+                    {/* Course */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:table-cell border-b md:border-none border-gray-100 text-sm">
+                        <span className="font-bold text-gray-500 md:hidden">Course</span>
+                        <div className="text-right md:text-left">
+                            <div className="font-medium text-gray-800">{p.course_name}</div>
+                            <div className="text-xs text-gray-500 mt-0.5">{p.batch_name}</div>
+                        </div>
+                    </td>
+                    
+                    {/* Payment Info */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:table-cell border-b md:border-none border-gray-100">
+                        <span className="font-bold text-gray-500 md:hidden">Amount</span>
+                        <div className="text-right md:text-left">
+                            <div className="font-bold text-blue-600">{Number(p.amount).toLocaleString()} Ks</div>
+                            <div className="flex flex-col items-end md:items-start gap-1 mt-1">
+                                <div className="text-[11px] font-bold text-gray-600 uppercase tracking-wider bg-gray-200 px-2 py-0.5 rounded w-fit">
+                                    {p.payment_method}
+                                </div>
+                                {p.transaction_id ? (
+                                    <div className="text-[11px] text-gray-500 mt-0.5">
+                                        TID: <span className="font-mono text-gray-800 font-bold">{p.transaction_id}</span>
+                                    </div>
+                                ) : (
+                                    <div className="text-[11px] text-gray-400 italic mt-0.5">No Trans ID</div>
+                                )}
+                            </div>
+                        </div>
+                    </td>
+                    
+                    {/* Receipt */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:justify-center md:table-cell border-b md:border-none border-gray-100 text-center">
+                        <span className="font-bold text-gray-500 md:hidden">Receipt</span>
                         {p.receipt_image ? (
                             <button 
                                 onClick={() => setSelectedImage(p.receipt_image)}
@@ -134,7 +158,9 @@ function PaymentVerification() {
                         )}
                     </td>
 
-                    <td className="p-3 text-center">
+                    {/* Status */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:justify-center md:table-cell border-b md:border-none border-gray-100 text-center">
+                      <span className="font-bold text-gray-500 md:hidden">Status</span>
                       <span className={`px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wider ${
                           p.status === 'verified' ? 'bg-green-100 text-green-700 border border-green-200' : 
                           p.status === 'rejected' ? 'bg-red-100 text-red-700 border border-red-200' : 
@@ -144,22 +170,22 @@ function PaymentVerification() {
                       </span>
                     </td>
 
-                    <td className="p-3 text-center">
+                    {/* Actions */}
+                    <td className="p-4 md:p-3 flex justify-between items-center md:justify-center md:table-cell text-center bg-gray-50 md:bg-transparent rounded-b-xl md:rounded-none">
+                        <span className="font-bold text-gray-500 md:hidden">Action</span>
                         {p.status === 'pending' ? (
-                            <div className="flex justify-center gap-2">
+                            <div className="flex justify-end md:justify-center gap-2">
                                 <button 
                                     onClick={() => handleStatusChange(p.id, 'verified')} 
-                                    className="text-green-600 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs font-semibold transition border border-green-100"
-                                    title="Approve Payment"
+                                    className="text-green-600 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded text-xs font-semibold transition border border-green-100 shadow-sm"
                                 >
-                                    Verify
+                                    Verify ✅
                                 </button>
                                 <button 
                                     onClick={() => handleStatusChange(p.id, 'rejected')} 
-                                    className="text-red-600 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs font-semibold transition border border-red-100"
-                                    title="Reject Payment"
+                                    className="text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded text-xs font-semibold transition border border-red-100 shadow-sm"
                                 >
-                                    Reject
+                                    Reject ❌
                                 </button>
                             </div>
                         ) : (
@@ -178,7 +204,7 @@ function PaymentVerification() {
         <div style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
             backgroundColor: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(5px)',
-            zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px'
+            zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px'
         }}
         onClick={() => setSelectedImage(null)}
         >
@@ -190,12 +216,11 @@ function PaymentVerification() {
             }}
             onClick={(e) => e.stopPropagation()} 
             >
-                {/* Header */}
                 <div style={{
                     padding: '15px 20px', borderBottom: '1px solid #e5e7eb', display: 'flex',
                     justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#f9fafb'
                 }}>
-                    <h3 style={{ margin: 0, fontSize: '16px', fontWeights: '600', color: '#1f2937' }}>
+                    <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#1f2937' }}>
                         📄 Payment Receipt
                     </h3>
                     <button 
@@ -210,16 +235,15 @@ function PaymentVerification() {
                     </button>
                 </div>
 
-                {/* Image Area */}
                 <div style={{
-                    padding: '20px', backgroundColor: '#ffffff', display: 'flex',
+                    padding: '15px', backgroundColor: '#ffffff', display: 'flex',
                     justifyContent: 'center', alignItems: 'center', overflow: 'auto'
                 }}>
                     <img 
                         src={getImageUrl(selectedImage)} 
                         alt="Evidence" 
                         style={{
-                            maxWidth: '100%', maxHeight: '65vh', borderRadius: '8px',
+                            maxWidth: '100%', maxHeight: '70vh', borderRadius: '8px',
                             objectFit: 'contain', border: '1px solid #f3f4f6'
                         }}
                         onError={(e) => {
