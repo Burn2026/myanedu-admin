@@ -4,6 +4,7 @@
   padding: 10px;
   max-width: 1200px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .sm-title {
@@ -37,12 +38,14 @@
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   border: 1px solid #e2e8f0;
   overflow: hidden;
+  max-width: 100%;
 }
 
 /* Table Desktop Styles */
 .sm-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .sm-table thead {
@@ -68,6 +71,7 @@
   background: #f8fafc;
 }
 
+/* ✅ FIX: ID အရှည်ကြီးများကို အောက်တစ်ကြောင်း ဆင်းစေရန် ပြင်ဆင်ထားသည် */
 .sm-id-badge {
   background: #e2e8f0;
   color: #475569;
@@ -75,12 +79,16 @@
   border-radius: 6px;
   font-size: 12px;
   font-weight: 700;
+  display: inline-block;
+  word-break: break-all; /* Force long ID to break */
+  max-width: 100%;
 }
 
 /* Action Buttons */
 .sm-actions {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap; /* Prevent buttons from overflowing */
 }
 
 .sm-btn-edit, .sm-btn-delete {
@@ -227,20 +235,27 @@
   .sm-table, .sm-table tbody, .sm-table tr, .sm-table td {
     display: block;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .sm-table tr {
     margin-bottom: 15px;
-    border-bottom: 5px solid #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
 
   .sm-table td {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* ✅ မျက်နှာပြင်ပြည့်မသွားအောင် အပေါ်ကနေ ညှိပေးသည် */
     text-align: right;
-    padding: 12px 15px;
+    padding: 12px 10px;
     border-bottom: 1px solid #f1f5f9;
+    gap: 15px;
+    word-break: break-word; /* ✅ စာလုံးအရှည်များကို အောက်ဆင်းစေသည် */
   }
 
   .sm-table td::before {
@@ -249,11 +264,14 @@
     color: #64748b;
     font-size: 12px;
     text-transform: uppercase;
+    flex-shrink: 0;
+    text-align: left;
   }
 
   .sm-table td:last-child {
     border-bottom: none;
     justify-content: flex-end; /* Align buttons to right */
+    padding-bottom: 5px;
   }
 
   .sm-actions {
