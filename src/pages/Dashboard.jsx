@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Existing Components (ရှိပြီးသား Component များ)
+// Existing Components
 import PaymentVerification from '../components/PaymentVerification';
 import StudentManagement from '../components/StudentManagement'; 
 import ExamManagement from '../components/ExamManagement'; 
 import LessonManagement from '../components/LessonManagement';
 import DiscussionManager from '../components/DiscussionManager'; 
-
-// (New Feature) Course Management Component Import (အသစ်ထပ်ထည့်လိုက်ပါသည်)
 import CourseManagement from '../components/CourseManagement'; 
 
-import '../App.css';
+import './Dashboard.css'; // ✅ CSS အသစ်ချိတ်ဆက်ထားသည် (App.css အစား)
+
+// Icons (SVG)
+const MenuIcon = () => <svg fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>;
+const CloseIcon = () => <svg fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>;
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState('stats');
   const [stats, setStats] = useState({ total_students: 0, total_income: 0 });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Mobile Menu State
   const navigate = useNavigate();
 
-  // Stats Data ဆွဲထုတ်ခြင်း
   useEffect(() => {
     fetch('https://myanedu-backend.onrender.com/admin/stats')
       .then(res => res.json())
@@ -33,68 +35,80 @@ function Dashboard() {
     }
   };
 
+  const changeTab = (tabName) => {
+    setActiveTab(tabName);
+    setIsMobileMenuOpen(false); // Menu ရွေးပြီးရင် အလိုလိုပြန်ပိတ်မည်
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
-      <div className="dashboard-layout" style={{ minHeight: '90vh' }}>
+    <div className="admin-root">
+      
+      {/* --- Mobile Header --- */}
+      <div className="mobile-header">
+        <div className="mobile-logo">🛡️ Admin Panel</div>
+        <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
+      </div>
+
+      <div className="dashboard-layout">
         
-        {/* Sidebar */}
-        <div className="dashboard-sidebar">
+        {/* --- Sidebar --- */}
+        <div className={`dashboard-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
           <div className="sidebar-profile">
-            <div className="sidebar-avatar" style={{ background: '#ef4444' }}>A</div>
+            <div className="sidebar-avatar">A</div>
             <div className="sidebar-name">Admin User</div>
             <div className="sidebar-phone">System Administrator</div>
           </div>
 
           <div className="sidebar-menu">
-            <div className={`menu-item ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
+            <div className={`menu-item ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => changeTab('stats')}>
               📊 Dashboard Stats
             </div>
-            
-            {/* (NEW) Manage Courses Tab (အသစ်ထည့်လိုက်သော မီနူး) */}
-            <div className={`menu-item ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => setActiveTab('courses')}>
+            <div className={`menu-item ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => changeTab('courses')}>
               📚 Manage Courses
             </div>
-
-            <div className={`menu-item ${activeTab === 'students' ? 'active' : ''}`} onClick={() => setActiveTab('students')}>
+            <div className={`menu-item ${activeTab === 'students' ? 'active' : ''}`} onClick={() => changeTab('students')}>
               👨‍🎓 Manage Students
             </div>
-            <div className={`menu-item ${activeTab === 'payments' ? 'active' : ''}`} onClick={() => setActiveTab('payments')}>
+            <div className={`menu-item ${activeTab === 'payments' ? 'active' : ''}`} onClick={() => changeTab('payments')}>
               💰 Verify Payments
             </div>
-            <div className={`menu-item ${activeTab === 'exams' ? 'active' : ''}`} onClick={() => setActiveTab('exams')}>
+            <div className={`menu-item ${activeTab === 'exams' ? 'active' : ''}`} onClick={() => changeTab('exams')}>
               📝 Exam Results
             </div>
-            <div className={`menu-item ${activeTab === 'lessons' ? 'active' : ''}`} onClick={() => setActiveTab('lessons')}>
+            <div className={`menu-item ${activeTab === 'lessons' ? 'active' : ''}`} onClick={() => changeTab('lessons')}>
               📺 Manage Lessons
             </div>
-            
-            <div className={`menu-item ${activeTab === 'discuss' ? 'active' : ''}`} onClick={() => setActiveTab('discuss')}>
+            <div className={`menu-item ${activeTab === 'discuss' ? 'active' : ''}`} onClick={() => changeTab('discuss')}>
               💬 Discussions
             </div>
-            
-            <div className="menu-item" style={{color: '#ef4444', marginTop: 'auto'}} onClick={handleLogout}>
+            <div className="menu-item logout-btn" onClick={handleLogout}>
               🚪 Logout
             </div>
           </div>
         </div>
 
-        {/* Content Area */}
+        {/* --- Background Overlay for Mobile Menu --- */}
+        {isMobileMenuOpen && <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>}
+
+        {/* --- Content Area --- */}
         <div className="dashboard-content">
           
-          {/* Stats Tab */}
           {activeTab === 'stats' && (
-            <div>
+            <div className="animate-fade-in">
               <h2 className="dashboard-title">Admin Overview</h2>
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-icon" style={{background: '#dbeafe', color: '#2563eb'}}>👥</div>
+                  <div className="stat-icon icon-blue">👥</div>
                   <div className="stat-info">
                     <h4>Total Students</h4>
                     <p>{stats.total_students}</p>
                   </div>
                 </div>
                 <div className="stat-card">
-                  <div className="stat-icon" style={{background: '#dcfce7', color: '#16a34a'}}>💵</div>
+                  <div className="stat-icon icon-green">💵</div>
                   <div className="stat-info">
                     <h4>Total Income</h4>
                     <p>{Number(stats.total_income).toLocaleString()} Ks</p>
@@ -104,38 +118,14 @@ function Dashboard() {
             </div>
           )}
 
-          {/* (NEW) Courses Tab Content */}
-          {activeTab === 'courses' && (
-             <CourseManagement /> 
-          )}
-
-          {/* Students Tab */}
-          {activeTab === 'students' && (
-             <StudentManagement /> 
-          )}
-          
-          {/* Payments Tab */}
-          {activeTab === 'payments' && (
-             <PaymentVerification /> 
-          )}
-
-          {/* Exams Tab */}
-          {activeTab === 'exams' && (
-             <ExamManagement /> 
-          )}
-
-          {/* Lessons Tab */}
-          {activeTab === 'lessons' && (
-             <LessonManagement /> 
-          )}
-
-          {/* Discussions Tab */}
-          {activeTab === 'discuss' && (
-             <DiscussionManager /> 
-          )}
+          {activeTab === 'courses' && <CourseManagement />}
+          {activeTab === 'students' && <StudentManagement />}
+          {activeTab === 'payments' && <PaymentVerification />}
+          {activeTab === 'exams' && <ExamManagement />}
+          {activeTab === 'lessons' && <LessonManagement />}
+          {activeTab === 'discuss' && <DiscussionManager />}
           
         </div>
-
       </div>
     </div>
   );

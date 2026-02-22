@@ -1,0 +1,259 @@
+/* src/pages/Dashboard.css */
+
+.admin-root {
+  background-color: #f1f5f9;
+  min-height: 100vh;
+}
+
+/* Mobile Header (Hidden on Desktop) */
+.mobile-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 15px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.mobile-logo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-btn svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Main Layout */
+.dashboard-layout {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+  width: 280px;
+  background: #1e293b; /* Dark theme sidebar */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out;
+  flex-shrink: 0;
+}
+
+.sidebar-profile {
+  padding: 30px 20px;
+  text-align: center;
+  border-bottom: 1px solid #334155;
+}
+
+.sidebar-avatar {
+  width: 60px;
+  height: 60px;
+  background: #ef4444;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 auto 15px auto;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.sidebar-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.sidebar-phone {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.sidebar-menu {
+  flex: 1;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.menu-item {
+  padding: 15px 25px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #cbd5e1;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-item:hover {
+  background: #334155;
+  color: white;
+}
+
+.menu-item.active {
+  background: #2563eb;
+  color: white;
+  border-left: 4px solid #60a5fa;
+}
+
+.logout-btn {
+  margin-top: auto;
+  color: #fca5a5 !important;
+  border-top: 1px solid #334155;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+  color: #f87171 !important;
+}
+
+/* Content Area */
+.dashboard-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  min-width: 0; /* Important to prevent flex overflow */
+}
+
+.dashboard-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 25px;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.icon-blue { background: #dbeafe; color: #2563eb; }
+.icon-green { background: #dcfce7; color: #16a34a; }
+
+.stat-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-info p {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   📱 MOBILE RESPONSIVE 
+   ========================================= */
+@media screen and (max-width: 992px) {
+  .mobile-header {
+    display: flex;
+  }
+
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+  }
+
+  .dashboard-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 90;
+    backdrop-filter: blur(3px);
+  }
+
+  .dashboard-content {
+    padding: 15px;
+  }
+
+  .dashboard-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-info p {
+    font-size: 24px;
+  }
+}
