@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './LessonManagement.css'; // ✅ CSS ဖိုင်အသစ် ချိတ်ဆက်ထားသည်
+import './LessonManagement.css'; 
 
 function LessonManagement() {
   const [batches, setBatches] = useState([]);
@@ -14,8 +14,9 @@ function LessonManagement() {
   });
   const [videoFile, setVideoFile] = useState(null); 
 
+  // ✅ 1. Fetch from /admin/batches to get lesson_count
   useEffect(() => {
-    fetch('https://myanedu-backend.onrender.com/public/batches')
+    fetch('https://myanedu-backend.onrender.com/admin/batches')
       .then(res => res.json())
       .then(data => setBatches(data))
       .catch(err => console.error(err));
@@ -64,6 +65,12 @@ function LessonManagement() {
         setVideoFile(null);
         document.getElementById('videoInput').value = ""; 
         fetchLessons();
+        
+        // Refresh batch list to update the lesson count in dropdown
+        fetch('https://myanedu-backend.onrender.com/admin/batches')
+          .then(res => res.json())
+          .then(data => setBatches(data));
+
       } else {
         alert(`Upload Failed: ${responseJson.message || "Something went wrong"}`);
       }
@@ -78,15 +85,17 @@ function LessonManagement() {
     if(!window.confirm("Are you sure?")) return;
     await fetch(`https://myanedu-backend.onrender.com/admin/lessons/${id}`, { method: 'DELETE' });
     fetchLessons();
+    
+    // Refresh batch list to update the lesson count in dropdown after deletion
+    fetch('https://myanedu-backend.onrender.com/admin/batches')
+      .then(res => res.json())
+      .then(data => setBatches(data));
   };
 
-  // Helper Function for File Name
   const extractFileName = (url) => {
     if (!url) return "Unknown File";
     const parts = url.split('/');
-    const fullFileName = parts[parts.length - 1];
-    // Remove query params or extra string if needed, keeping it simple here
-    return fullFileName;
+    return parts[parts.length - 1];
   };
 
   return (
@@ -107,8 +116,11 @@ function LessonManagement() {
                 onChange={e => setSelectedBatch(e.target.value)}
             >
                 <option value="">-- အတန်း ရွေးချယ်ပါ --</option>
+                {/* ✅ 2. Dropdown တွင် Lesson အရေအတွက်ကို ပါ ပြသမည် */}
                 {batches.map(b => (
-                    <option key={b.id} value={b.id}>{b.course_name} - {b.batch_name}</option>
+                    <option key={b.id} value={b.id}>
+                        {b.course_name} - {b.batch_name} ({b.lesson_count || 0} Lessons)
+                    </option>
                 ))}
             </select>
           </div>
@@ -167,7 +179,10 @@ function LessonManagement() {
         <div className="lm-list-section">
            <div className="lm-list-header">
                <h3>Existing Lessons</h3>
-               <span className="lm-badge">{lessons.length} Lessons</span>
+               {/* ✅ Badge ကို ရွေးထားတဲ့ အတန်းပေါ်မူတည်ပြီး ပြောင်းလဲပေးမည် */}
+               <span className="lm-badge">
+                   {selectedBatch ? `${lessons.length} Lessons` : "0 Lessons"}
+               </span>
            </div>
            
            <div className="lm-list-body">
