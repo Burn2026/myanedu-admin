@@ -46,11 +46,10 @@
   color: #334155;
 }
 
-/* ✅ FIX: Select Box အနက်ရောင်မဖြစ်စေရန် ပြင်ဆင်ထားသည် */
 .lm-select {
   width: 100%;
   padding: 12px 15px;
-  background-color: #ffffff; /* အမြဲတမ်း အဖြူရောင် */
+  background-color: #ffffff; 
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
@@ -63,6 +62,11 @@
 
 .lm-select:focus {
   border-color: #3b82f6;
+}
+
+.lm-select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
 }
 
 /* Form Styles */
@@ -92,11 +96,10 @@
   color: #ef4444;
 }
 
-/* ✅ FIX: Input နှင့် Textarea အနက်ရောင်မဖြစ်စေရန် */
 .lm-input {
   width: 100%;
   padding: 12px 15px;
-  background-color: #ffffff; /* အမြဲတမ်း အဖြူရောင် */
+  background-color: #ffffff; 
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
@@ -116,16 +119,20 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.lm-input:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
 .lm-textarea {
   resize: vertical;
   min-height: 80px;
 }
 
-/* ✅ FIX: File Input Box အတွက်ပါ ထည့်သွင်းထားသည် */
 .lm-file-input {
   width: 100%;
   padding: 10px;
-  background-color: #f8fafc; /* အဖြူရောင်/မီးခိုးနုရောင် */
+  background-color: #f8fafc; 
   border: 1px dashed #cbd5e1;
   border-radius: 8px;
   font-size: 13px;
@@ -134,6 +141,12 @@
   box-sizing: border-box;
 }
 
+.lm-file-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Buttons */
 .lm-btn-submit {
   background: #2563eb;
   color: white;
@@ -159,8 +172,30 @@
   cursor: not-allowed;
 }
 
+/* Cancel Upload Button */
+.lm-btn-cancel-upload {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.lm-btn-cancel-upload:hover {
+  background: #fecaca;
+}
+
 /* =========================================
-   📈 PROGRESS BAR ANIMATION (အသစ်ထည့်သွင်းထားသည်)
+   📈 PROGRESS BAR ANIMATION 
    ========================================= */
 .lm-progress-container {
   width: 100%;
@@ -347,6 +382,85 @@
 .lm-btn-delete:hover {
   background: #fecaca;
 }
+
+/* =========================================
+   🌟 PREMIUM SUCCESS MODAL
+   ========================================= */
+.lm-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeInModal 0.2s ease-out;
+}
+
+.lm-modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  animation: slideUpModal 0.3s ease-out;
+}
+
+.lm-modal-icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+  animation: bounceIcon 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lm-modal-title {
+  margin: 0 0 10px 0;
+  color: #16a34a;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.lm-modal-text {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0 0 25px 0;
+}
+
+.lm-modal-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.lm-modal-btn:hover {
+  background: #15803d;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIcon {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
 
 /* =========================================
    📱 MOBILE RESPONSIVE

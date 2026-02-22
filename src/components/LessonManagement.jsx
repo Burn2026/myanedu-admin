@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './LessonManagement.css'; 
 
 function LessonManagement() {
@@ -7,9 +7,12 @@ function LessonManagement() {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false); 
-  
-  // ✅ 1. Upload Progress (ရာခိုင်နှုန်း) မှတ်ရန် State အသစ်
   const [uploadProgress, setUploadProgress] = useState(0); 
+  
+  // ✅ 1. Premium Success Dialog အတွက် State
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const xhrRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -47,14 +50,13 @@ function LessonManagement() {
       });
   };
 
-  // ✅ 2. XHR အသုံးပြု၍ Progress Tracking ပြုလုပ်ခြင်း
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedBatch) return alert("ကျေးဇူးပြု၍ အတန်း (Batch) ရွေးချယ်ပါ");
     if (!videoFile) return alert("Video File ရွေးချယ်ပေးပါ");
 
     setUploading(true); 
-    setUploadProgress(0); // အစတွင် 0% မှစမည်
+    setUploadProgress(0); 
 
     const data = new FormData();
     data.append('batch_id', selectedBatch);
@@ -62,10 +64,11 @@ function LessonManagement() {
     data.append('description', formData.description);
     data.append('video_file', videoFile); 
 
-    const xhr = new XMLHttpRequest();
+    xhrRef.current = new XMLHttpRequest();
+    const xhr = xhrRef.current;
+
     xhr.open('POST', 'https://myanedu-backend.onrender.com/admin/lessons', true);
 
-    // Upload လုပ်နေစဉ် ရာခိုင်နှုန်းကို တွက်ချက်ခြင်း
     xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
@@ -73,10 +76,11 @@ function LessonManagement() {
         }
     };
 
-    // Upload အောင်မြင်သွားသောအခါ
     xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-            alert("✅ ဗီဒီယို တင်ခြင်း အောင်မြင်ပါသည်!");
+            // ✅ 2. ရိုးရိုး alert အစား Premium Dialog ဖွင့်မည်
+            setShowSuccessModal(true);
+            
             setFormData({ title: "", description: "" });
             setVideoFile(null);
             document.getElementById('videoInput').value = ""; 
@@ -95,17 +99,30 @@ function LessonManagement() {
             alert(`Upload Failed: ${errorMsg}`);
         }
         setUploading(false);
-        setUploadProgress(0); // အားလုံးပြီးရင် ပြန် Reset ချမည်
+        setUploadProgress(0);
+        xhrRef.current = null;
     };
 
-    // Upload လုပ်နေစဉ် Error တက်သွားသောအခါ
     xhr.onerror = () => {
-        alert("Connection Error (Server Unreachable or Timeout). ဖိုင်ကြီးလွန်း၍ ကြာချိန်ပိုလိုအပ်နေခြင်း ဖြစ်နိုင်ပါသည်။"); 
+        alert("Connection Error (Server Unreachable or Timeout)."); 
         setUploading(false);
         setUploadProgress(0);
+        xhrRef.current = null;
     };
 
-    xhr.send(data); // Request စတင်ပို့မည်
+    xhr.onabort = () => {
+        setUploading(false);
+        setUploadProgress(0);
+        xhrRef.current = null;
+    };
+
+    xhr.send(data); 
+  };
+
+  const handleCancelUpload = () => {
+      if (xhrRef.current) {
+          xhrRef.current.abort(); 
+      }
   };
 
   const handleDelete = async (id) => {
@@ -131,7 +148,6 @@ function LessonManagement() {
       </h2>
 
       <div className="lm-grid">
-        
         {/* --- Left: Form Section --- */}
         <div className="lm-card">
           <div className="lm-card-header">
@@ -140,6 +156,7 @@ function LessonManagement() {
                 className="lm-select" 
                 value={selectedBatch}
                 onChange={e => setSelectedBatch(e.target.value)}
+                disabled={uploading}
             >
                 <option value="">-- အတန်း ရွေးချယ်ပါ --</option>
                 {batches.map(b => (
@@ -163,6 +180,7 @@ function LessonManagement() {
                         placeholder="e.g. Chapter 1: Introduction"
                         value={formData.title} 
                         onChange={e => setFormData({...formData, title: e.target.value})} 
+                        disabled={uploading}
                     />
                 </div>
                 
@@ -175,6 +193,7 @@ function LessonManagement() {
                         accept="video/*"
                         className="lm-file-input" 
                         onChange={e => setVideoFile(e.target.files[0])}
+                        disabled={uploading}
                     />
                 </div>
 
@@ -186,10 +205,10 @@ function LessonManagement() {
                         placeholder="Brief summary of the lesson..."
                         value={formData.description} 
                         onChange={e => setFormData({...formData, description: e.target.value})} 
+                        disabled={uploading}
                     />
                 </div>
 
-                {/* ✅ 3. Progress Bar ကို ဤနေရာတွင် ပြသမည် */}
                 {uploading && (
                     <div className="lm-progress-container">
                         <div 
@@ -201,13 +220,23 @@ function LessonManagement() {
                     </div>
                 )}
 
-                <button 
-                    type="submit" 
-                    className="lm-btn-submit" 
-                    disabled={!selectedBatch || uploading}
-                > 
-                    {uploading ? `⏳ Uploading... ${uploadProgress}%` : "📤 Upload Lesson"} 
-                </button>
+                {uploading ? (
+                    <button 
+                        type="button" 
+                        onClick={handleCancelUpload}
+                        className="lm-btn-cancel-upload"
+                    > 
+                        ❌ Cancel
+                    </button>
+                ) : (
+                    <button 
+                        type="submit" 
+                        className="lm-btn-submit" 
+                        disabled={!selectedBatch}
+                    > 
+                        📤 Upload Lesson 
+                    </button>
+                )}
             </form>
           </div>
         </div>
@@ -258,6 +287,24 @@ function LessonManagement() {
         </div>
 
       </div>
+
+      {/* ✅ 3. PREMIUM SUCCESS MODAL */}
+      {showSuccessModal && (
+        <div className="lm-modal-overlay">
+          <div className="lm-modal-content">
+            <div className="lm-modal-icon">✅</div>
+            <h3 className="lm-modal-title">အောင်မြင်ပါသည်</h3>
+            <p className="lm-modal-text">သင်ခန်းစာ ဗီဒီယိုကို အောင်မြင်စွာ တင်ပြီးပါပြီ။</p>
+            <button 
+                className="lm-modal-btn" 
+                onClick={() => setShowSuccessModal(false)}
+            >
+                OK
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
