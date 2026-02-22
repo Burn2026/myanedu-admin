@@ -1,0 +1,253 @@
+/* src/components/ExamManagement.css */
+
+.em-container {
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.em-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Utilities */
+.em-fw-bold { font-weight: 700; color: #1e293b; }
+.em-fw-medium { font-weight: 600; color: #334155; }
+.em-text-blue { color: #2563eb; }
+.em-text-gray { color: #64748b; }
+.em-text-small { font-size: 12px; }
+
+/* Add Result Card (Form) */
+.em-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.em-card-header {
+  background: #f8fafc;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.em-card-header h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.em-card-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.em-card-body {
+  padding: 20px;
+}
+
+.em-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.em-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.em-form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.em-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1e293b;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.em-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.em-input:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.border-green {
+  border-color: #16a34a;
+}
+
+.em-status-text {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.em-btn-save {
+  margin-top: 25px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  display: inline-block;
+}
+
+.em-btn-save:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.em-btn-save:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  color: #64748b;
+}
+
+/* Table Wrappers */
+.em-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.em-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.em-table thead {
+  background: #f8fafc;
+}
+
+.em-table th {
+  padding: 15px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 700;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.em-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.em-table tr:hover {
+  background: #f8fafc;
+}
+
+.em-empty, .em-loading {
+  text-align: center;
+  padding: 40px !important;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.em-grade-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.grade-pass { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.grade-fail { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+.em-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.em-btn-delete:hover { background: #fecaca; }
+
+/* =========================================
+   📱 MOBILE RESPONSIVE 
+   ========================================= */
+@media screen and (max-width: 768px) {
+  .em-table thead {
+    display: none;
+  }
+
+  .em-table, .em-table tbody, .em-table tr, .sm-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .em-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .em-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: right;
+  }
+
+  .em-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #64748b;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-align: left;
+    margin-right: 15px;
+  }
+
+  .em-table td:last-child {
+    border-bottom: none;
+    justify-content: flex-end;
+  }
+  
+  .em-btn-save {
+      width: 100%;
+  }
+}
