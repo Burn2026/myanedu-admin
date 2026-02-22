@@ -11,7 +11,9 @@ function StudentManagement() {
     fetch('https://myanedu-backend.onrender.com/admin/students') 
       .then(res => res.json())
       .then(data => {
-        const sorted = data.sort((a, b) => a.id - b.id);
+        // Date အဟောင်းကနေ အသစ် (သို့မဟုတ်) ရရှိလာတဲ့ အစဉ်လိုက်အတိုင်း ထားမည်
+        // UUID ဖြစ်နေသဖြင့် String sort လုပ်ပေးပါမည်
+        const sorted = data.sort((a, b) => a.created_at ? new Date(a.created_at) - new Date(b.created_at) : a.id.localeCompare(b.id));
         setStudents(sorted);
         setLoading(false);
       })
@@ -84,35 +86,44 @@ function StudentManagement() {
               </tr>
             </thead>
             <tbody>
-              {students.map(std => (
-                <tr key={std.id}>
-                  {/* ✅ အချက်အလက်များကို sm-td-value ဖြင့် ထုပ်ပေးထားသည် */}
-                  <td data-label="ID">
-                    <div className="sm-td-value">
-                        <span className="sm-id-badge">#{std.id}</span>
-                    </div>
-                  </td>
-                  <td data-label="Name" className="sm-fw-bold">
-                    <div className="sm-td-value">{std.name}</div>
-                  </td>
-                  <td data-label="Phone" className="sm-text-blue">
-                    <div className="sm-td-value">{std.phone_primary}</div>
-                  </td>
-                  <td data-label="Address" className="sm-text-gray">
-                    <div className="sm-td-value">{std.address || '-'}</div>
-                  </td>
-                  <td data-label="Actions" className="sm-actions">
-                    <div className="sm-td-value sm-action-group">
-                        <button onClick={() => setEditData(std)} className="sm-btn-edit">
-                            ✎ Edit
-                        </button>
-                        <button onClick={() => handleDelete(std.id)} className="sm-btn-delete">
-                            🗑️ Delete
-                        </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {/* ✅ map တွင် index ကိုပါ ယူလိုက်ပါသည် */}
+              {students.map((std, index) => {
+                
+                // ✅ Custom ID ဖန်တီးခြင်း (#00edu01, #00edu02 စသဖြင့်)
+                // index က 0 ကစလို့ +1 လုပ်ပေးပြီး၊ ဂဏန်း ၂ လုံးပြည့်အောင် padStart ဖြင့် 0 ထည့်သည်
+                const displayId = `#00edu${String(index + 1).padStart(2, '0')}`;
+
+                return (
+                  <tr key={std.id}>
+                    <td data-label="ID">
+                      <div className="sm-td-value">
+                          {/* ✅ ရှည်လျားသော std.id အစား လှပသော displayId ကို သုံးလိုက်ပါပြီ */}
+                          <span className="sm-id-badge">{displayId}</span>
+                      </div>
+                    </td>
+                    <td data-label="Name" className="sm-fw-bold">
+                      <div className="sm-td-value">{std.name}</div>
+                    </td>
+                    <td data-label="Phone" className="sm-text-blue">
+                      <div className="sm-td-value">{std.phone_primary}</div>
+                    </td>
+                    <td data-label="Address" className="sm-text-gray">
+                      <div className="sm-td-value">{std.address || '-'}</div>
+                    </td>
+                    <td data-label="Actions" className="sm-actions">
+                      <div className="sm-td-value sm-action-group">
+                          {/* ✅ Database နဲ့ ချိတ်ဆက်ဖို့ကတော့ ID အစစ် (std.id) ကိုပဲ ဆက်သုံးထားပါတယ် */}
+                          <button onClick={() => setEditData(std)} className="sm-btn-edit">
+                              ✎ Edit
+                          </button>
+                          <button onClick={() => handleDelete(std.id)} className="sm-btn-delete">
+                              🗑️ Delete
+                          </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <div className="sm-footer-info">
