@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import './StudentManagement.css'; // ✅ CSS အသစ် ချိတ်ဆက်ထားသည်
+import './StudentManagement.css'; 
 
 function StudentManagement() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editData, setEditData] = useState(null); 
 
-  // Data ဆွဲထုတ်ခြင်း
   const fetchStudents = () => {
     setLoading(true);
-    fetch('https://myanedu-backend.onrender.com/admin/students') // ✅ API လမ်းကြောင်း ပြင်ထားသည် (admin route ဖြစ်ရမည်)
+    fetch('https://myanedu-backend.onrender.com/admin/students') 
       .then(res => res.json())
       .then(data => {
         const sorted = data.sort((a, b) => a.id - b.id);
@@ -26,7 +25,6 @@ function StudentManagement() {
     fetchStudents();
   }, []);
 
-  // ကျောင်းသား ပယ်ဖျက်ခြင်း (Delete)
   const handleDelete = async (id) => {
     if(!window.confirm("⚠️ သတိပေးချက်!\nဤကျောင်းသားကို ဖျက်လိုက်ပါက သူ၏ ငွေသွင်းစာရင်းများနှင့် စာမေးပွဲရမှတ်များပါ ပျက်သွားပါလိမ့်မည်။\nဆက်လုပ်မည်လား?")) return;
 
@@ -41,16 +39,12 @@ function StudentManagement() {
     } catch(err) { alert("Connection Error"); }
   };
 
-  // အချက်အလက် ပြင်ဆင်ခြင်း (Update)
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      // ✅ Admin ကပြင်တာမို့ profile update API အတိုင်းသုံးမည်ဆိုပါက JSON ပို့မရပါ (Form Data ပို့ရမည်)
-      // (သို့မဟုတ်) Admin သီးသန့် PUT /admin/students/:id ရှိလျှင် ချိတ်နိုင်သည်။ လက်ရှိက profile API သုံးထားပုံရသည်။
       const data = new FormData();
       data.append('name', editData.name);
       data.append('address', editData.address);
-      // Phone နံပါတ် ပြင်ချင်ရင် Backend API လိုအပ်ပါမယ်။ လောလောဆယ် UI ပေါ်မှာပဲ ပြင်ထားတယ်။
       
       const res = await fetch(`https://myanedu-backend.onrender.com/students/profile/${editData.id}`, {
         method: 'PUT',
@@ -92,19 +86,30 @@ function StudentManagement() {
             <tbody>
               {students.map(std => (
                 <tr key={std.id}>
+                  {/* ✅ အချက်အလက်များကို sm-td-value ဖြင့် ထုပ်ပေးထားသည် */}
                   <td data-label="ID">
-                    <span className="sm-id-badge">#{std.id}</span>
+                    <div className="sm-td-value">
+                        <span className="sm-id-badge">#{std.id}</span>
+                    </div>
                   </td>
-                  <td data-label="Name" className="sm-fw-bold">{std.name}</td>
-                  <td data-label="Phone" className="sm-text-blue">{std.phone_primary}</td>
-                  <td data-label="Address" className="sm-text-gray">{std.address || '-'}</td>
+                  <td data-label="Name" className="sm-fw-bold">
+                    <div className="sm-td-value">{std.name}</div>
+                  </td>
+                  <td data-label="Phone" className="sm-text-blue">
+                    <div className="sm-td-value">{std.phone_primary}</div>
+                  </td>
+                  <td data-label="Address" className="sm-text-gray">
+                    <div className="sm-td-value">{std.address || '-'}</div>
+                  </td>
                   <td data-label="Actions" className="sm-actions">
-                    <button onClick={() => setEditData(std)} className="sm-btn-edit">
-                        ✎ Edit
-                    </button>
-                    <button onClick={() => handleDelete(std.id)} className="sm-btn-delete">
-                        🗑️ Delete
-                    </button>
+                    <div className="sm-td-value sm-action-group">
+                        <button onClick={() => setEditData(std)} className="sm-btn-edit">
+                            ✎ Edit
+                        </button>
+                        <button onClick={() => handleDelete(std.id)} className="sm-btn-delete">
+                            🗑️ Delete
+                        </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -139,7 +144,6 @@ function StudentManagement() {
                     
                     <div className="sm-form-group">
                         <label>Phone (Primary)</label>
-                        {/* Note: ဖုန်းနံပါတ် ပြင်ခွင့်ပေးထားသော်လည်း လက်ရှိ backend မှာ Phone update logic မပါဝင်သေးပါ */}
                         <input 
                             required
                             type="text"
@@ -167,7 +171,6 @@ function StudentManagement() {
             </div>
         </div>
       )}
-
     </div>
   );
 }

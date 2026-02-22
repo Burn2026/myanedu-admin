@@ -38,7 +38,7 @@
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   border: 1px solid #e2e8f0;
   overflow: hidden;
-  max-width: 100%;
+  max-width: 100%; /* Prevent horizontal scroll */
 }
 
 /* Table Desktop Styles */
@@ -71,7 +71,6 @@
   background: #f8fafc;
 }
 
-/* ✅ FIX: ID အရှည်ကြီးများကို အောက်တစ်ကြောင်း ဆင်းစေရန် ပြင်ဆင်ထားသည် */
 .sm-id-badge {
   background: #e2e8f0;
   color: #475569;
@@ -80,15 +79,13 @@
   font-size: 12px;
   font-weight: 700;
   display: inline-block;
-  word-break: break-all; /* Force long ID to break */
-  max-width: 100%;
+  word-break: break-all; /* ✅ စာလုံးအရှည်ကြီးကို ချိုးပစ်ရန် */
 }
 
 /* Action Buttons */
 .sm-actions {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap; /* Prevent buttons from overflowing */
 }
 
 .sm-btn-edit, .sm-btn-delete {
@@ -225,7 +222,7 @@
 }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE
+   📱 MOBILE RESPONSIVE 
    ========================================= */
 @media screen and (max-width: 768px) {
   .sm-table thead {
@@ -250,12 +247,10 @@
   .sm-table td {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* ✅ မျက်နှာပြင်ပြည့်မသွားအောင် အပေါ်ကနေ ညှိပေးသည် */
-    text-align: right;
+    align-items: flex-start;
     padding: 12px 10px;
     border-bottom: 1px solid #f1f5f9;
     gap: 15px;
-    word-break: break-word; /* ✅ စာလုံးအရှည်များကို အောက်ဆင်းစေသည် */
   }
 
   .sm-table td::before {
@@ -265,16 +260,28 @@
     font-size: 12px;
     text-transform: uppercase;
     flex-shrink: 0;
+    width: 70px; /* ✅ Label များကို အချိုးညီစေရန် */
     text-align: left;
+  }
+
+  /* ✅ ဤအပိုင်းသည် စာလုံးအရှည်များကို အလိုအလျောက် အောက်ဆင်းစေသည့် နေရာဖြစ်သည် */
+  .sm-td-value {
+    flex: 1;
+    min-width: 0; 
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: right;
+  }
+
+  .sm-action-group {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap; /* ✅ Button များ နေရာမဆံ့ပါက အောက်ဆင်းရန် */
+    gap: 8px;
   }
 
   .sm-table td:last-child {
     border-bottom: none;
-    justify-content: flex-end; /* Align buttons to right */
     padding-bottom: 5px;
-  }
-
-  .sm-actions {
-    justify-content: flex-end;
   }
 }
