@@ -75,17 +75,30 @@
   color: #475569;
 }
 
+/* ✅ FIX: Input နှင့် Select များ အနက်ရောင်မဖြစ်စေရန် ပြင်ဆင်ထားသည် */
 .em-input {
   width: 100%;
   padding: 12px 15px;
+  background-color: #ffffff; /* ဖုန်း Dark Mode တွင် အနက်ရောင်မဖြစ်စေရန် */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
-  color: #1e293b;
+  color: #1e293b; /* စာသားအရောင် */
   outline: none;
   transition: 0.2s;
   box-sizing: border-box;
+}
+
+/* Select Box အတွက် သီးသန့် ကာကွယ်မှု */
+select.em-input {
+  background-color: #ffffff;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.em-input::placeholder {
+  color: #94a3b8;
 }
 
 .em-input:focus {
@@ -95,6 +108,7 @@
 
 .em-input:disabled {
   background-color: #f1f5f9;
+  color: #64748b;
   cursor: not-allowed;
 }
 
@@ -210,9 +224,10 @@
     display: none;
   }
 
-  .em-table, .em-table tbody, .em-table tr, .sm-table td {
+  .em-table, .em-table tbody, .em-table tr, .em-table td {
     display: block;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .em-table tr {
