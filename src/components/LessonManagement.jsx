@@ -7,6 +7,9 @@ function LessonManagement() {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false); 
+  
+  // ✅ 1. Upload Progress (ရာခိုင်နှုန်း) မှတ်ရန် State အသစ်
+  const [uploadProgress, setUploadProgress] = useState(0); 
 
   const [formData, setFormData] = useState({
     title: "",
@@ -26,7 +29,6 @@ function LessonManagement() {
     fetchLessons();
   }, [selectedBatch]);
 
-  // ✅ (FIXED) လမ်းကြောင်းကို /public/lessons မှ /students/lessons သို့ ပြောင်းထားပါသည်
   const fetchLessons = () => {
     setLoading(true);
     fetch(`https://myanedu-backend.onrender.com/students/lessons?batch_id=${selectedBatch}`)
@@ -40,52 +42,70 @@ function LessonManagement() {
       })
       .catch(err => {
           console.error("Fetch lessons error:", err);
-          setLessons([]); // Error တက်ခဲ့လျှင် 0 အဖြစ်ထားမည်
+          setLessons([]); 
           setLoading(false);
       });
   };
 
-  const handleSubmit = async (e) => {
+  // ✅ 2. XHR အသုံးပြု၍ Progress Tracking ပြုလုပ်ခြင်း
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedBatch) return alert("ကျေးဇူးပြု၍ အတန်း (Batch) ရွေးချယ်ပါ");
     if (!videoFile) return alert("Video File ရွေးချယ်ပေးပါ");
 
     setUploading(true); 
+    setUploadProgress(0); // အစတွင် 0% မှစမည်
 
-    try {
-      const data = new FormData();
-      data.append('batch_id', selectedBatch);
-      data.append('title', formData.title);
-      data.append('description', formData.description);
-      data.append('video_file', videoFile); 
+    const data = new FormData();
+    data.append('batch_id', selectedBatch);
+    data.append('title', formData.title);
+    data.append('description', formData.description);
+    data.append('video_file', videoFile); 
 
-      const res = await fetch('https://myanedu-backend.onrender.com/admin/lessons', {
-        method: 'POST',
-        body: data 
-      });
-      
-      const responseJson = await res.json(); 
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://myanedu-backend.onrender.com/admin/lessons', true);
 
-      if (res.ok) {
-        alert("✅ ဗီဒီယို တင်ခြင်း အောင်မြင်ပါသည်!");
-        setFormData({ title: "", description: "" });
-        setVideoFile(null);
-        document.getElementById('videoInput').value = ""; 
-        fetchLessons();
-        
-        // Refresh batch list to update the lesson count in dropdown
-        fetch('https://myanedu-backend.onrender.com/admin/batches')
-          .then(res => res.json())
-          .then(data => setBatches(data));
+    // Upload လုပ်နေစဉ် ရာခိုင်နှုန်းကို တွက်ချက်ခြင်း
+    xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(percentComplete);
+        }
+    };
 
-      } else {
-        alert(`Upload Failed: ${responseJson.message || "Something went wrong"}`);
-      }
-    } catch (err) { 
+    // Upload အောင်မြင်သွားသောအခါ
+    xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            alert("✅ ဗီဒီယို တင်ခြင်း အောင်မြင်ပါသည်!");
+            setFormData({ title: "", description: "" });
+            setVideoFile(null);
+            document.getElementById('videoInput').value = ""; 
+            fetchLessons();
+            
+            fetch('https://myanedu-backend.onrender.com/admin/batches')
+              .then(res => res.json())
+              .then(data => setBatches(data));
+
+        } else {
+            let errorMsg = "Something went wrong";
+            try {
+                const resJson = JSON.parse(xhr.responseText);
+                errorMsg = resJson.message || errorMsg;
+            } catch(e) {}
+            alert(`Upload Failed: ${errorMsg}`);
+        }
+        setUploading(false);
+        setUploadProgress(0); // အားလုံးပြီးရင် ပြန် Reset ချမည်
+    };
+
+    // Upload လုပ်နေစဉ် Error တက်သွားသောအခါ
+    xhr.onerror = () => {
         alert("Connection Error (Server Unreachable or Timeout). ဖိုင်ကြီးလွန်း၍ ကြာချိန်ပိုလိုအပ်နေခြင်း ဖြစ်နိုင်ပါသည်။"); 
-    } finally { 
-        setUploading(false); 
-    }
+        setUploading(false);
+        setUploadProgress(0);
+    };
+
+    xhr.send(data); // Request စတင်ပို့မည်
   };
 
   const handleDelete = async (id) => {
@@ -93,7 +113,6 @@ function LessonManagement() {
     await fetch(`https://myanedu-backend.onrender.com/admin/lessons/${id}`, { method: 'DELETE' });
     fetchLessons();
     
-    // Refresh batch list to update the lesson count in dropdown after deletion
     fetch('https://myanedu-backend.onrender.com/admin/batches')
       .then(res => res.json())
       .then(data => setBatches(data));
@@ -170,12 +189,24 @@ function LessonManagement() {
                     />
                 </div>
 
+                {/* ✅ 3. Progress Bar ကို ဤနေရာတွင် ပြသမည် */}
+                {uploading && (
+                    <div className="lm-progress-container">
+                        <div 
+                            className="lm-progress-bar" 
+                            style={{ width: `${uploadProgress}%` }}
+                        >
+                            {uploadProgress > 5 ? `${uploadProgress}%` : ''}
+                        </div>
+                    </div>
+                )}
+
                 <button 
                     type="submit" 
                     className="lm-btn-submit" 
                     disabled={!selectedBatch || uploading}
                 > 
-                    {uploading ? "⏳ Uploading Video... (Please Wait)" : "📤 Upload Lesson"} 
+                    {uploading ? `⏳ Uploading... ${uploadProgress}%` : "📤 Upload Lesson"} 
                 </button>
             </form>
           </div>

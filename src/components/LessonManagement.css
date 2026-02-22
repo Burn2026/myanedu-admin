@@ -159,6 +159,57 @@
   cursor: not-allowed;
 }
 
+/* =========================================
+   📈 PROGRESS BAR ANIMATION (အသစ်ထည့်သွင်းထားသည်)
+   ========================================= */
+.lm-progress-container {
+  width: 100%;
+  background-color: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 22px;
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.lm-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.3s ease;
+  white-space: nowrap;
+  position: relative;
+}
+
+.lm-progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-stripes 1s linear infinite;
+  z-index: 1;
+}
+
+@keyframes progress-stripes {
+  from { background-position: 1rem 0; }
+  to { background-position: 0 0; }
+}
+
 /* List Section */
 .lm-list-section {
   background: white;
