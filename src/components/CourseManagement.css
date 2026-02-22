@@ -1,0 +1,159 @@
+/* src/components/CourseManagement.css */
+
+.cm-container {
+  padding: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cm-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  align-items: start; /* Prevents cards from stretching equally if content is different */
+}
+
+/* Card Styles */
+.cm-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+
+.cm-card-header {
+  background: #f8fafc;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cm-card-header h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.cm-card-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.cm-card-body {
+  padding: 20px;
+}
+
+/* Form Styles */
+.cm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cm-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.cm-form-group label span {
+  color: #ef4444; /* Red star for required */
+}
+
+.cm-form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.cm-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.cm-input::placeholder {
+  color: #94a3b8;
+}
+
+.cm-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.cm-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+select.cm-input {
+  cursor: pointer;
+  background-color: white;
+}
+
+/* Buttons */
+.cm-btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 5px;
+}
+
+.cm-btn-blue {
+  background: #2563eb;
+  color: white;
+}
+.cm-btn-blue:hover { background: #1d4ed8; }
+
+.cm-btn-green {
+  background: #16a34a;
+  color: white;
+}
+.cm-btn-green:hover { background: #15803d; }
+
+
+/* =========================================
+   📱 MOBILE RESPONSIVE
+   ========================================= */
+@media screen and (max-width: 640px) {
+  .cm-form-row {
+    flex-direction: column; /* Stack input fields on small screens */
+    gap: 18px;
+  }
+
+  .cm-grid {
+    grid-template-columns: 1fr; /* Force 1 column on very small screens */
+  }
+}
