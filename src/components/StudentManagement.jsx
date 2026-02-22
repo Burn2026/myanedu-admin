@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import './StudentManagement.css'; // ✅ CSS အသစ် ချိတ်ဆက်ထားသည်
 
 function StudentManagement() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
-  
-  // ပြင်ဆင်ရန် (Edit) အတွက် State များ
-  const [editData, setEditData] = useState(null); // null ဆိုရင် Edit Modal မပေါ်ဘူး
+  const [editData, setEditData] = useState(null); 
 
   // Data ဆွဲထုတ်ခြင်း
   const fetchStudents = () => {
     setLoading(true);
-    fetch('/https://myanedu-backend.onrender.com/students')
+    fetch('https://myanedu-backend.onrender.com/admin/students') // ✅ API လမ်းကြောင်း ပြင်ထားသည် (admin route ဖြစ်ရမည်)
       .then(res => res.json())
       .then(data => {
-        // ID ငယ်စဉ်ကြီးလိုက် စီပါမယ်
         const sorted = data.sort((a, b) => a.id - b.id);
         setStudents(sorted);
         setLoading(false);
@@ -47,15 +45,21 @@ function StudentManagement() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://myanedu-backend.onrender.com/students/${editData.id}`, {
+      // ✅ Admin ကပြင်တာမို့ profile update API အတိုင်းသုံးမည်ဆိုပါက JSON ပို့မရပါ (Form Data ပို့ရမည်)
+      // (သို့မဟုတ်) Admin သီးသန့် PUT /admin/students/:id ရှိလျှင် ချိတ်နိုင်သည်။ လက်ရှိက profile API သုံးထားပုံရသည်။
+      const data = new FormData();
+      data.append('name', editData.name);
+      data.append('address', editData.address);
+      // Phone နံပါတ် ပြင်ချင်ရင် Backend API လိုအပ်ပါမယ်။ လောလောဆယ် UI ပေါ်မှာပဲ ပြင်ထားတယ်။
+      
+      const res = await fetch(`https://myanedu-backend.onrender.com/students/profile/${editData.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editData)
+        body: data
       });
 
       if(res.ok) {
         alert("ပြင်ဆင်ခြင်း အောင်မြင်သည်!");
-        setEditData(null); // Modal ပိတ်မည်
+        setEditData(null); 
         fetchStudents();
       } else {
         alert("Update Failed");
@@ -64,15 +68,21 @@ function StudentManagement() {
   };
 
   return (
-    <div>
-      <h2 className="dashboard-title">👨‍🎓 Student Management</h2>
+    <div className="sm-container">
+      <h2 className="sm-title">
+        <span>👨‍🎓</span> Student Management
+      </h2>
       
-      {loading ? <p>Loading...</p> : (
-        <div className="table-card" style={{overflowX: 'auto'}}>
-          <table style={{width: '100%', borderCollapse: 'collapse'}}>
+      {loading ? (
+        <div className="sm-loading">Loading student data...</div>
+      ) : students.length === 0 ? (
+        <div className="sm-empty">No students found.</div>
+      ) : (
+        <div className="sm-table-wrapper">
+          <table className="sm-table">
             <thead>
-              <tr style={{background: '#f1f5f9', textAlign: 'left'}}>
-                <th style={{padding: '10px'}}>ID</th>
+              <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Phone (Login)</th>
                 <th>Address</th>
@@ -81,68 +91,77 @@ function StudentManagement() {
             </thead>
             <tbody>
               {students.map(std => (
-                <tr key={std.id} style={{borderBottom: '1px solid #e2e8f0'}}>
-                  <td style={{padding: '10px'}}>#{std.id}</td>
-                  <td style={{fontWeight: 'bold', color: '#1e293b'}}>{std.name}</td>
-                  <td style={{color: '#2563eb'}}>{std.phone_primary}</td>
-                  <td style={{color: '#64748b', fontSize: '13px'}}>{std.address}</td>
-                  <td>
-                    <div style={{display: 'flex', gap: '5px'}}>
-                        <button 
-                            onClick={() => setEditData(std)}
-                            style={{background: '#f59e0b', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer'}}>
-                            ✎ Edit
-                        </button>
-                        <button 
-                            onClick={() => handleDelete(std.id)}
-                            style={{background: '#dc2626', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer'}}>
-                            🗑️ Delete
-                        </button>
-                    </div>
+                <tr key={std.id}>
+                  <td data-label="ID">
+                    <span className="sm-id-badge">#{std.id}</span>
+                  </td>
+                  <td data-label="Name" className="sm-fw-bold">{std.name}</td>
+                  <td data-label="Phone" className="sm-text-blue">{std.phone_primary}</td>
+                  <td data-label="Address" className="sm-text-gray">{std.address || '-'}</td>
+                  <td data-label="Actions" className="sm-actions">
+                    <button onClick={() => setEditData(std)} className="sm-btn-edit">
+                        ✎ Edit
+                    </button>
+                    <button onClick={() => handleDelete(std.id)} className="sm-btn-delete">
+                        🗑️ Delete
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p style={{textAlign: 'center', color: '#64748b', fontSize: '12px', marginTop: '10px'}}>
-             စုစုပေါင်း ကျောင်းသား ({students.length}) ဦး
-          </p>
+          <div className="sm-footer-info">
+              စုစုပေါင်း ကျောင်းသား <b>({students.length})</b> ဦး
+          </div>
         </div>
       )}
 
       {/* --- Edit Modal --- */}
       {editData && (
-        <div className="modal-overlay">
-            <div className="modal-box" style={{width: '400px', padding: '30px'}}>
-                <h3 style={{marginTop: 0}}>✏️ Edit Student Info</h3>
-                <form onSubmit={handleUpdate} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
-                    <div>
-                        <label style={{fontSize: '12px', fontWeight: 'bold'}}>Name</label>
+        <div className="sm-modal-overlay" onClick={() => setEditData(null)}>
+            <div className="sm-modal-box" onClick={(e) => e.stopPropagation()}>
+                <div className="sm-modal-header">
+                    <h3>✏️ Edit Student Info</h3>
+                    <button className="sm-close-btn" onClick={() => setEditData(null)}>✕</button>
+                </div>
+                
+                <form onSubmit={handleUpdate} className="sm-modal-form">
+                    <div className="sm-form-group">
+                        <label>Name</label>
                         <input 
-                            className="search-input" style={{width: '100%'}}
+                            required
+                            type="text"
+                            className="sm-input" 
                             value={editData.name} 
                             onChange={e => setEditData({...editData, name: e.target.value})}
                         />
                     </div>
-                    <div>
-                        <label style={{fontSize: '12px', fontWeight: 'bold'}}>Phone (Primary)</label>
+                    
+                    <div className="sm-form-group">
+                        <label>Phone (Primary)</label>
+                        {/* Note: ဖုန်းနံပါတ် ပြင်ခွင့်ပေးထားသော်လည်း လက်ရှိ backend မှာ Phone update logic မပါဝင်သေးပါ */}
                         <input 
-                            className="search-input" style={{width: '100%'}}
+                            required
+                            type="text"
+                            className="sm-input" 
                             value={editData.phone_primary} 
                             onChange={e => setEditData({...editData, phone_primary: e.target.value})}
                         />
                     </div>
-                    <div>
-                        <label style={{fontSize: '12px', fontWeight: 'bold'}}>Address</label>
+                    
+                    <div className="sm-form-group">
+                        <label>Address</label>
                         <textarea 
-                            className="search-input" style={{width: '100%'}} rows="3"
-                            value={editData.address} 
+                            className="sm-input sm-textarea" 
+                            rows="3"
+                            value={editData.address || ''} 
                             onChange={e => setEditData({...editData, address: e.target.value})}
                         />
                     </div>
-                    <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
-                        <button type="button" onClick={() => setEditData(null)} style={{flex: 1, padding: '10px', cursor: 'pointer'}}>Cancel</button>
-                        <button type="submit" style={{flex: 1, padding: '10px', background: '#2563eb', color: 'white', border: 'none', cursor: 'pointer'}}>Update</button>
+                    
+                    <div className="sm-modal-actions">
+                        <button type="button" onClick={() => setEditData(null)} className="sm-btn-cancel">Cancel</button>
+                        <button type="submit" className="sm-btn-save">Save Changes</button>
                     </div>
                 </form>
             </div>
