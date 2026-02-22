@@ -20,7 +20,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 25px;
-  align-items: start; /* Prevents cards from stretching equally if content is different */
+  align-items: start; 
 }
 
 /* Card Styles */
@@ -75,7 +75,7 @@
 }
 
 .cm-form-group label span {
-  color: #ef4444; /* Red star for required */
+  color: #ef4444; 
 }
 
 .cm-form-row {
@@ -87,9 +87,11 @@
   flex: 1;
 }
 
+/* ✅ FIX: Input များ အနက်ရောင်မဖြစ်စေရန် ပြင်ဆင်ထားသည် */
 .cm-input {
   width: 100%;
   padding: 12px 15px;
+  background-color: #ffffff; /* အမြဲတမ်း အဖြူရောင်ဖြစ်စေရန် */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
@@ -116,7 +118,7 @@
 
 select.cm-input {
   cursor: pointer;
-  background-color: white;
+  background-color: #ffffff; /* ဖုန်းအတွက် အဖြူရောင်သတ်မှတ်သည် */
 }
 
 /* Buttons */
@@ -149,11 +151,11 @@ select.cm-input {
    ========================================= */
 @media screen and (max-width: 640px) {
   .cm-form-row {
-    flex-direction: column; /* Stack input fields on small screens */
+    flex-direction: column; 
     gap: 18px;
   }
 
   .cm-grid {
-    grid-template-columns: 1fr; /* Force 1 column on very small screens */
+    grid-template-columns: 1fr; 
   }
 }

@@ -46,17 +46,19 @@
   color: #334155;
 }
 
+/* ✅ FIX: Select Box အနက်ရောင်မဖြစ်စေရန် ပြင်ဆင်ထားသည် */
 .lm-select {
   width: 100%;
   padding: 12px 15px;
+  background-color: #ffffff; /* အမြဲတမ်း အဖြူရောင် */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
   color: #1e293b;
-  background-color: white;
   cursor: pointer;
   outline: none;
   transition: 0.2s;
+  box-sizing: border-box;
 }
 
 .lm-select:focus {
@@ -90,9 +92,11 @@
   color: #ef4444;
 }
 
+/* ✅ FIX: Input နှင့် Textarea အနက်ရောင်မဖြစ်စေရန် */
 .lm-input {
   width: 100%;
   padding: 12px 15px;
+  background-color: #ffffff; /* အမြဲတမ်း အဖြူရောင် */
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 14px;
@@ -101,6 +105,10 @@
   box-sizing: border-box;
   outline: none;
   transition: 0.2s;
+}
+
+.lm-input::placeholder {
+  color: #94a3b8;
 }
 
 .lm-input:focus {
@@ -113,14 +121,15 @@
   min-height: 80px;
 }
 
+/* ✅ FIX: File Input Box အတွက်ပါ ထည့်သွင်းထားသည် */
 .lm-file-input {
   width: 100%;
   padding: 10px;
+  background-color: #f8fafc; /* အဖြူရောင်/မီးခိုးနုရောင် */
   border: 1px dashed #cbd5e1;
   border-radius: 8px;
   font-size: 13px;
   color: #475569;
-  background: #f8fafc;
   cursor: pointer;
   box-sizing: border-box;
 }
@@ -158,7 +167,7 @@
   border: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Stretch to match form height */
+  height: 100%; 
   min-height: 400px;
 }
 
@@ -234,7 +243,7 @@
 
 .lm-lesson-info {
   flex: 1;
-  min-width: 0; /* Important for text truncation */
+  min-width: 0; 
 }
 
 .lm-lesson-title {
@@ -293,7 +302,7 @@
    ========================================= */
 @media screen and (max-width: 992px) {
   .lm-grid {
-    grid-template-columns: 1fr; /* Stack form and list vertically */
+    grid-template-columns: 1fr; 
   }
 
   .lm-list-section {
