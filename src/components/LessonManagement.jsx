@@ -14,7 +14,6 @@ function LessonManagement() {
   });
   const [videoFile, setVideoFile] = useState(null); 
 
-  // ✅ 1. Fetch from /admin/batches to get lesson_count
   useEffect(() => {
     fetch('https://myanedu-backend.onrender.com/admin/batches')
       .then(res => res.json())
@@ -27,15 +26,23 @@ function LessonManagement() {
     fetchLessons();
   }, [selectedBatch]);
 
+  // ✅ (FIXED) လမ်းကြောင်းကို /public/lessons မှ /students/lessons သို့ ပြောင်းထားပါသည်
   const fetchLessons = () => {
     setLoading(true);
-    fetch(`https://myanedu-backend.onrender.com/public/lessons?batch_id=${selectedBatch}`)
-      .then(res => res.json())
+    fetch(`https://myanedu-backend.onrender.com/students/lessons?batch_id=${selectedBatch}`)
+      .then(res => {
+          if (!res.ok) throw new Error("Network response was not ok");
+          return res.json();
+      })
       .then(data => {
         setLessons(data);
         setLoading(false);
       })
-      .catch(err => setLoading(false));
+      .catch(err => {
+          console.error("Fetch lessons error:", err);
+          setLessons([]); // Error တက်ခဲ့လျှင် 0 အဖြစ်ထားမည်
+          setLoading(false);
+      });
   };
 
   const handleSubmit = async (e) => {
@@ -116,7 +123,6 @@ function LessonManagement() {
                 onChange={e => setSelectedBatch(e.target.value)}
             >
                 <option value="">-- အတန်း ရွေးချယ်ပါ --</option>
-                {/* ✅ 2. Dropdown တွင် Lesson အရေအတွက်ကို ပါ ပြသမည် */}
                 {batches.map(b => (
                     <option key={b.id} value={b.id}>
                         {b.course_name} - {b.batch_name} ({b.lesson_count || 0} Lessons)
@@ -179,7 +185,6 @@ function LessonManagement() {
         <div className="lm-list-section">
            <div className="lm-list-header">
                <h3>Existing Lessons</h3>
-               {/* ✅ Badge ကို ရွေးထားတဲ့ အတန်းပေါ်မူတည်ပြီး ပြောင်းလဲပေးမည် */}
                <span className="lm-badge">
                    {selectedBatch ? `${lessons.length} Lessons` : "0 Lessons"}
                </span>
