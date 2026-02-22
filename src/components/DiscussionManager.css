@@ -1,0 +1,305 @@
+/* src/components/DiscussionManager.css */
+
+.dm-container {
+  padding: 10px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.dm-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Layout Grid */
+.dm-layout {
+  display: flex;
+  height: calc(100vh - 180px); /* Fill available height */
+  min-height: 500px;
+  gap: 20px;
+}
+
+/* Sidebar */
+.dm-sidebar {
+  width: 320px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dm-sidebar-header {
+  padding: 15px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.dm-sidebar-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.dm-empty-list {
+  padding: 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.dm-list-item {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  background: white;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+}
+
+.dm-list-item:hover {
+  background: #f8fafc;
+}
+
+.dm-list-item.active {
+  background: #eff6ff;
+  border-left-color: #2563eb;
+}
+
+.dm-item-course {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dm-item-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.dm-item-count {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 5px;
+}
+
+/* Main Chat Area */
+.dm-chat-area {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0; /* Prevent flex overflow */
+}
+
+.dm-chat-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dm-back-btn {
+  display: none; /* Hidden on desktop */
+  background: #e2e8f0;
+  color: #1e293b;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dm-chat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.dm-chat-course {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.dm-chat-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.dm-chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: #f1f5f9;
+}
+
+.dm-empty-chat {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.dm-message-row {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+}
+
+.dm-message-row.is-admin {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.dm-message-row.is-student {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.dm-message-sender {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.dm-message-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.is-admin .dm-message-bubble {
+  background: #2563eb;
+  color: white;
+  border-top-right-radius: 0;
+}
+
+.is-student .dm-message-bubble {
+  background: white;
+  color: #1e293b;
+  border-top-left-radius: 0;
+}
+
+.dm-message-time {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+/* Form Area */
+.dm-reply-form {
+  padding: 15px;
+  background: white;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 10px;
+}
+
+/* ✅ FIX: Input Box အနက်ရောင်မဖြစ်စေရန် ပြင်ဆင်ထားသည် */
+.dm-input {
+  flex: 1;
+  padding: 12px 15px;
+  background-color: #ffffff; /* ဖုန်းအတွက် အဖြူရောင် */
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  outline: none;
+  font-family: inherit;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.dm-input:focus {
+  border-color: #3b82f6;
+}
+
+.dm-btn-send {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dm-btn-send:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.dm-btn-send:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.dm-no-selection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  flex-direction: column;
+}
+
+.dm-no-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   📱 MOBILE RESPONSIVE 
+   ========================================= */
+@media screen and (max-width: 768px) {
+  .dm-layout {
+    height: calc(100vh - 100px); /* Adjust for mobile header */
+  }
+
+  .dm-sidebar, .dm-chat-area {
+    width: 100%; /* Take full width */
+    height: 100%;
+    border-radius: 8px;
+  }
+
+  /* ✅ Mobile တွင် ရွေးထားခြင်းမရှိလျှင် Chat Area ဖျောက်၊ ရွေးထားလျှင် Sidebar ဖျောက်မည် */
+  .dm-hidden-mobile {
+    display: none !important;
+  }
+
+  .dm-back-btn {
+    display: block; /* Show back button on mobile */
+  }
+
+  .dm-message-row {
+    max-width: 90%; /* Give bubbles more width on mobile */
+  }
+}

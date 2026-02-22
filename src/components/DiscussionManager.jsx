@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './DiscussionManager.css'; // ✅ CSS အသစ် ချိတ်ဆက်ထားသည်
 
 function DiscussionManager() {
   const [discussions, setDiscussions] = useState([]);
@@ -20,7 +21,7 @@ function DiscussionManager() {
 
   useEffect(() => {
     fetchDiscussions();
-    const interval = setInterval(fetchDiscussions, 5000); // 5 စက္ကန့်တစ်ကြိမ် Refresh (Faster Update)
+    const interval = setInterval(fetchDiscussions, 5000); // 5 စက္ကန့်တစ်ကြိမ် Refresh 
     return () => clearInterval(interval);
   }, []);
 
@@ -64,111 +65,113 @@ function DiscussionManager() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '80vh', gap: '20px' }}>
-      
-      {/* Sidebar: List of Discussions */}
-      <div style={{ width: '320px', background: 'white', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '15px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', fontWeight: 'bold' }}>
-          💬 Inbox ({discussions.length})
-        </div>
-        <div style={{ overflowY: 'auto', flex: 1 }}>
-          {discussions.map(d => (
-            <div 
-              key={d.id} 
-              onClick={() => loadChat(d)}
-              style={{ 
-                padding: '15px', borderBottom: '1px solid #f1f5f9', cursor: 'pointer',
-                background: selectedLesson?.id === d.id ? '#eff6ff' : 'white',
-                borderLeft: selectedLesson?.id === d.id ? '4px solid #2563eb' : '4px solid transparent'
-              }}
-            >
-              {/* (UPDATED) Course & Batch Info */}
-              <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'bold' }}>
-                 {d.course_name} • {d.batch_name}
-              </div>
-              
-              {/* Lesson Title */}
-              <div style={{ fontWeight: '600', fontSize: '14px', color: '#1e293b' }}>
-                 📺 {d.lesson_title}
-              </div>
-              
-              <div style={{ fontSize: '12px', color: '#94a3b8', marginTop: '5px' }}>
-                 {d.total_comments} message(s)
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="dm-container">
+      <h2 className="dm-title">
+        <span>💬</span> Discussion Manager
+      </h2>
 
-      {/* Main Chat Area */}
-      <div style={{ flex: 1, background: 'white', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        {selectedLesson ? (
-          <>
-            {/* Chat Header showing Details */}
-            <div style={{ padding: '15px 20px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
-               <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 'bold' }}>
-                  {selectedLesson.course_name} / {selectedLesson.batch_name}
-               </div>
-               <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#2563eb' }}>
-                  Topic: {selectedLesson.lesson_title}
-               </div>
-            </div>
-            
-            {/* Messages */}
-            <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px', background: '#f1f5f9' }}>
-              {chatHistory.map(c => (
-                <div key={c.id} style={{ 
-                    alignSelf: c.user_role === 'admin' ? 'flex-end' : 'flex-start',
-                    maxWidth: '70%',
-                    display: 'flex', flexDirection: 'column', 
-                    alignItems: c.user_role === 'admin' ? 'flex-end' : 'flex-start' 
-                }}>
-                    <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}>
-                        {c.user_role === 'admin' ? 'You' : `👤 ${c.user_name}`}
+      <div className="dm-layout">
+        
+        {/* --- Sidebar: List of Discussions --- */}
+        {/* ဖုန်းတွင် Chat ရွေးထားပါက Sidebar ကို ဖျောက်ထားမည် */}
+        <div className={`dm-sidebar ${selectedLesson ? 'dm-hidden-mobile' : ''}`}>
+          <div className="dm-sidebar-header">
+            📬 Inbox ({discussions.length})
+          </div>
+          <div className="dm-sidebar-list">
+            {discussions.length === 0 ? (
+                <div className="dm-empty-list">No discussions yet.</div>
+            ) : (
+                discussions.map(d => (
+                <div 
+                    key={d.id} 
+                    onClick={() => loadChat(d)}
+                    className={`dm-list-item ${selectedLesson?.id === d.id ? 'active' : ''}`}
+                >
+                    <div className="dm-item-course">
+                        {d.course_name} • {d.batch_name}
                     </div>
-                    <div style={{
-                        background: c.user_role === 'admin' ? '#2563eb' : 'white',
-                        color: c.user_role === 'admin' ? 'white' : '#1e293b',
-                        padding: '12px 16px', borderRadius: '12px',
-                        boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-                        borderTopLeftRadius: c.user_role === 'student' ? '0' : '12px',
-                        borderTopRightRadius: c.user_role === 'admin' ? '0' : '12px',
-                    }}>
-                        {c.message}
+                    <div className="dm-item-title">
+                        📺 {d.lesson_title}
                     </div>
-                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '4px' }}>
-                        {new Date(c.created_at).toLocaleTimeString()}
+                    <div className="dm-item-count">
+                        {d.total_comments} message(s)
                     </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Reply Box */}
-            <form onSubmit={handleReply} style={{ padding: '20px', background: 'white', borderTop: '1px solid #e2e8f0', display: 'flex', gap: '10px' }}>
-              <input 
-                type="text" 
-                value={reply}
-                onChange={e => setReply(e.target.value)}
-                placeholder="Type your reply..."
-                style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none' }}
-              />
-              <button 
-                type="submit" 
-                disabled={loading}
-                style={{ background: '#2563eb', color: 'white', border: 'none', padding: '0 25px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
-              >
-                Send
-              </button>
-            </form>
-          </>
-        ) : (
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', flexDirection: 'column' }}>
-            <div style={{ fontSize: '40px', marginBottom: '10px' }}>💬</div>
-            <p>ဘယ်ဘက်ခြမ်းမှ ဆွေးနွေးမှုတစ်ခုကို ရွေးချယ်ပါ</p>
+                ))
+            )}
           </div>
-        )}
-      </div>
+        </div>
 
+        {/* --- Main Chat Area --- */}
+        {/* ဖုန်းတွင် Chat မရွေးရသေးပါက Chat Area ကို ဖျောက်ထားမည် */}
+        <div className={`dm-chat-area ${!selectedLesson ? 'dm-hidden-mobile' : ''}`}>
+          {selectedLesson ? (
+            <>
+              {/* Chat Header showing Details */}
+              <div className="dm-chat-header">
+                 {/* (Mobile Only) Back Button */}
+                 <button className="dm-back-btn" onClick={() => setSelectedLesson(null)}>
+                     ⬅ Back
+                 </button>
+                 <div className="dm-chat-info">
+                     <div className="dm-chat-course">
+                        {selectedLesson.course_name} / {selectedLesson.batch_name}
+                     </div>
+                     <div className="dm-chat-title">
+                        Topic: {selectedLesson.lesson_title}
+                     </div>
+                 </div>
+              </div>
+              
+              {/* Messages */}
+              <div className="dm-chat-messages">
+                {chatHistory.length === 0 ? (
+                    <div className="dm-empty-chat">No messages in this discussion yet.</div>
+                ) : (
+                    chatHistory.map(c => (
+                    <div key={c.id} className={`dm-message-row ${c.user_role === 'admin' ? 'is-admin' : 'is-student'}`}>
+                        <div className="dm-message-sender">
+                            {c.user_role === 'admin' ? 'You' : `👤 ${c.user_name}`}
+                        </div>
+                        <div className="dm-message-bubble">
+                            {c.message}
+                        </div>
+                        <div className="dm-message-time">
+                            {new Date(c.created_at).toLocaleTimeString()}
+                        </div>
+                    </div>
+                    ))
+                )}
+              </div>
+
+              {/* Reply Box */}
+              <form onSubmit={handleReply} className="dm-reply-form">
+                <input 
+                  type="text" 
+                  value={reply}
+                  onChange={e => setReply(e.target.value)}
+                  placeholder="Type your reply..."
+                  className="dm-input"
+                />
+                <button 
+                  type="submit" 
+                  disabled={loading || !reply.trim()}
+                  className="dm-btn-send"
+                >
+                  Send
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="dm-no-selection">
+              <div className="dm-no-icon">💬</div>
+              <p>ဘယ်ဘက်ခြမ်းမှ ဆွေးနွေးမှုတစ်ခုကို ရွေးချယ်ပါ</p>
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   );
 }
