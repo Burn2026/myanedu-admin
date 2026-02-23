@@ -9,16 +9,21 @@ function DiscussionManager() {
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
 
+  // ✅ ဖတ်ပြီးသား စာအရေအတွက်ကို မှတ်ထားမည့် State (Local Storage အသုံးပြုထားသည်)
+  const [readChats, setReadChats] = useState(() => {
+      const saved = localStorage.getItem('adminReadChats');
+      return saved ? JSON.parse(saved) : {};
+  });
+
   const fetchDiscussions = async () => {
     try {
       const res = await fetch('https://myanedu-backend.onrender.com/admin/discussions');
       if (res.ok) {
         const data = await res.json();
         
-        // ✅ FIX: စာမဝင်ထားသော (0 message) သင်ခန်းစာများကို ဖျောက်ထားရန် Filter လုပ်ခြင်း
+        // ✅ 0 message ဖြစ်နေသော Lesson များကို ဖျောက်ထားမည်
         const activeDiscussions = data.filter(d => Number(d.total_comments) > 0);
-        
-        setDiscussions(activeDiscussions); // Filter လုပ်ပြီးသားကိုသာ ပြသမည်
+        setDiscussions(activeDiscussions);
       }
     } catch (err) { console.error("Error fetching discussions:", err); }
   };
@@ -31,32 +36,22 @@ function DiscussionManager() {
 
   const loadChat = async (lesson) => {
     setSelectedLesson(lesson);
-    
     const targetId = lesson.lesson_id || lesson.id; 
-    
-    if (!targetId) {
-        console.error("Lesson ID ပျောက်ဆုံးနေပါသည်:", lesson);
-        return;
-    }
+    if (!targetId) return;
 
     try {
       const res = await fetch(`https://myanedu-backend.onrender.com/admin/comments?lesson_id=${targetId}`);
       if (res.ok) {
         const data = await res.json();
-        
-        let messages = [];
-        if (Array.isArray(data)) {
-            messages = data;
-        } else if (data && Array.isArray(data.data)) {
-            messages = data.data;
-        } else if (data && Array.isArray(data.comments)) {
-            messages = data.comments;
-        } else if (data && Array.isArray(data.messages)) {
-            messages = data.messages;
-        }
+        let messages = Array.isArray(data) ? data : (data.data || data.comments || data.messages || []);
         
         setChatHistory(messages);
         scrollToBottom();
+
+        // ✅ ဝင်ဖတ်လိုက်သည်နှင့် ယခုစာအရေအတွက်ကို 'ဖတ်ပြီး' အဖြစ် မှတ်သားမည်
+        const updatedReads = { ...readChats, [targetId]: Number(lesson.total_comments) };
+        setReadChats(updatedReads);
+        localStorage.setItem('adminReadChats', JSON.stringify(updatedReads));
       }
     } catch (err) { console.error("Error loading chat:", err); }
   };
@@ -67,9 +62,7 @@ function DiscussionManager() {
     }, 100);
   };
 
-  useEffect(() => {
-      scrollToBottom();
-  }, [chatHistory]);
+  useEffect(() => { scrollToBottom(); }, [chatHistory]);
 
   const handleReply = async (e) => {
     e.preventDefault();
@@ -94,11 +87,9 @@ function DiscussionManager() {
         setReply("");
         loadChat(selectedLesson); 
         fetchDiscussions(); 
-      } else {
-        alert("စာပို့ခြင်း မအောင်မြင်ပါ။");
       }
     } catch (err) {
-      alert("Network Error: အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပါ။");
+      alert("Network Error");
     } finally {
       setLoading(false);
     }
@@ -125,20 +116,32 @@ function DiscussionManager() {
                   const currentId = d.lesson_id || d.id;
                   const isActive = selectedLesson && (selectedLesson.lesson_id || selectedLesson.id) === currentId;
                   
+                  // တွက်ချက်ခြင်း: စာအသစ်ဝင်ထားသလား၊ ဖတ်ပြီးသားလား
+                  const readCount = readChats[currentId] || 0;
+                  const totalComments = Number(d.total_comments);
+                  const unreadCount = totalComments - readCount;
+                  const hasNewMessage = unreadCount > 0;
+                  
                   return (
-                    <div 
-                        key={currentId || index} 
-                        onClick={() => loadChat(d)}
-                        className={`dm-list-item ${isActive ? 'active' : ''}`}
-                    >
+                    <div key={currentId || index} onClick={() => loadChat(d)} className={`dm-list-item ${isActive ? 'active' : ''}`}>
                         <div className="dm-item-course">
                             {d.course_name} • {d.batch_name}
                         </div>
                         <div className="dm-item-title">
                             📺 {d.lesson_title}
                         </div>
-                        <div className="dm-item-count">
-                            <span className="dm-badge">{d.total_comments} message(s)</span>
+                        <div className="dm-item-status">
+                            {hasNewMessage ? (
+                                /* စာအသစ် ဝင်လာလျှင် အနီရောင်ပြမည် */
+                                <span className="dm-badge-new">
+                                    🔴 {unreadCount} New Message{unreadCount > 1 ? 's' : ''}
+                                </span>
+                            ) : (
+                                /* ဝင်ဖတ်ပြီးသွားလျှင် နောက်ဆုံးပို့ထားသော စာကိုသာ ပြမည် */
+                                <div className="dm-last-message">
+                                    {d.last_message || "📎 Attachment / Message"}
+                                </div>
+                            )}
                         </div>
                     </div>
                   );
@@ -151,7 +154,6 @@ function DiscussionManager() {
         <div className={`dm-chat-area ${!selectedLesson ? 'dm-hidden-mobile' : ''}`}>
           {selectedLesson ? (
             <>
-              {/* Chat Header */}
               <div className="dm-chat-header">
                  <button className="dm-back-btn" onClick={() => setSelectedLesson(null)}>
                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18">
@@ -162,13 +164,10 @@ function DiscussionManager() {
                      <div className="dm-chat-course">
                         {selectedLesson.course_name} / {selectedLesson.batch_name}
                      </div>
-                     <div className="dm-chat-title">
-                        {selectedLesson.lesson_title}
-                     </div>
+                     <div className="dm-chat-title">{selectedLesson.lesson_title}</div>
                  </div>
               </div>
               
-              {/* Chat Messages */}
               <div className="dm-chat-messages">
                 {chatHistory.length === 0 ? (
                     <div className="dm-empty-chat">No messages in this discussion yet.</div>
@@ -191,7 +190,6 @@ function DiscussionManager() {
                 <div ref={chatEndRef} />
               </div>
 
-              {/* Reply Box */}
               <form onSubmit={handleReply} className="dm-reply-form">
                 <input 
                   type="text" 
@@ -200,11 +198,7 @@ function DiscussionManager() {
                   placeholder="Type your reply here..."
                   className="dm-input"
                 />
-                <button 
-                  type="submit" 
-                  disabled={loading || !reply.trim()}
-                  className="dm-btn-send"
-                >
+                <button type="submit" disabled={loading || !reply.trim()} className="dm-btn-send">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
                     <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
                   </svg>

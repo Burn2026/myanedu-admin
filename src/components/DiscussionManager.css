@@ -99,13 +99,41 @@
   margin-bottom: 8px;
 }
 
-.dm-badge {
-  background: #e0e7ff;
-  color: #2563eb;
-  padding: 4px 8px;
+/* ✅ NEW MESSAGE & LAST MESSAGE STYLES */
+.dm-item-status {
+  margin-top: 5px;
+}
+
+.dm-badge-new {
+  background: #ef4444;
+  color: white;
+  padding: 4px 10px;
   border-radius: 12px;
   font-size: 11px;
   font-weight: 700;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.dm-last-message {
+  font-size: 12.5px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  font-weight: 500;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* Main Chat Area */
@@ -176,7 +204,6 @@
   background: #f8fafc;
 }
 
-/* Custom Scrollbar for Chat */
 .dm-chat-messages::-webkit-scrollbar { width: 6px; }
 .dm-chat-messages::-webkit-scrollbar-track { background: transparent; }
 .dm-chat-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -226,7 +253,7 @@
 .is-admin .dm-message-bubble {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
-  border-radius: 18px 18px 4px 18px; /* Telegram style radius */
+  border-radius: 18px 18px 4px 18px; 
 }
 
 .is-student .dm-message-bubble {
@@ -259,7 +286,7 @@
   padding: 14px 18px;
   background-color: #f1f5f9; 
   border: 1px solid transparent;
-  border-radius: 24px; /* Pill shape */
+  border-radius: 24px; 
   font-size: 14.5px;
   color: #1e293b;
   outline: none;
@@ -280,7 +307,7 @@
   border: none;
   width: 48px;
   height: 48px;
-  border-radius: 50%; /* Circle shape */
+  border-radius: 50%; 
   display: flex;
   align-items: center;
   justify-content: center;
