@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './PaymentVerification.css'; 
 
+// ✅ အမှားခြစ် (X) Icon Component
 const CloseIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="pv-close-icon">
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -14,7 +15,7 @@ function PaymentVerification() {
 
   const API_URL = "https://myanedu-backend.onrender.com";
 
-  // ✅ Admin ၏ ငွေလက်ခံမည့် ဖုန်းနံပါတ်များကို ဤနေရာတွင် မိမိအမှန်တကယ်အသုံးပြုမည့် နံပါတ်များဖြင့် ပြင်ဆင်ပါ
+  // Admin ငွေလက်ခံမည့် အကောင့်များ
   const getAdminAccount = (method) => {
     if (!method) return "Unknown";
     const m = method.toLowerCase();
@@ -24,7 +25,7 @@ function PaymentVerification() {
     if (m.includes('aya')) return "09111222333 (U Aung - AYA Pay)";
     if (m.includes('cb')) return "09444555666 (Daw Su - CB Pay)";
     
-    return "09XXXXXXXXX (Default Account)"; // အခြားနည်းလမ်းများအတွက်
+    return "09XXXXXXXXX (Default Account)";
   };
 
   useEffect(() => {
@@ -130,6 +131,7 @@ function PaymentVerification() {
                 
                 <div className="pv-modal-header">
                     <h3>Payment Details</h3>
+                    {/* ✅ Close Button with Icon */}
                     <button onClick={() => setSelectedPayment(null)} className="pv-btn-close">
                         <CloseIcon />
                     </button>
@@ -159,7 +161,6 @@ function PaymentVerification() {
                             <span className="pv-value pv-method">{selectedPayment.payment_method}</span>
                         </div>
                         
-                        {/* ✅ ထပ်ထည့်ထားသော Admin အကောင့် ဖုန်းနံပါတ် ပြသသည့်နေရာ (ထင်ရှားစေရန် အရောင်ခွဲထားသည်) */}
                         <div className="pv-detail-row" style={{ backgroundColor: '#eff6ff', borderColor: '#bfdbfe' }}>
                             <span className="pv-label" style={{ color: '#2563eb' }}>Received To (Admin A/C):</span>
                             <span className="pv-value pv-fw-bold">{getAdminAccount(selectedPayment.payment_method)}</span>

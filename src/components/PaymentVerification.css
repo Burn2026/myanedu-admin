@@ -27,7 +27,7 @@
 }
 
 /* =========================================
-   1. MAIN VIEW: CARD GRID (Premium Look)
+   1. MAIN VIEW: CARD GRID
    ========================================= */
 .pv-grid {
   display: grid;
@@ -171,6 +171,7 @@
   color: #1f2937;
 }
 
+/* ✅ Close Button Styling (Updated for better visibility) */
 .pv-btn-close {
   background: #e5e7eb;
   border: none;
@@ -181,17 +182,19 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #4b5563;
+  color: #374151; /* Darker gray color for the icon */
   transition: 0.2s;
 }
 
 .pv-btn-close:hover {
   background: #d1d5db;
+  color: #111827; /* Even darker on hover */
 }
 
+/* ✅ Close Icon SVG Styling */
 .pv-close-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px; /* Slightly larger icon */
+  height: 20px;
 }
 
 /* Modal Content Grid */
@@ -344,7 +347,7 @@
    ========================================= */
 @media screen and (max-width: 768px) {
   .pv-modal-content {
-    grid-template-columns: 1fr; /* ဖုန်းတွင် အပေါ်အောက် ပြောင်းမည် */
+    grid-template-columns: 1fr;
   }
 
   .pv-receipt-img {
@@ -352,7 +355,7 @@
   }
 
   .pv-modal-actions {
-    flex-direction: column-reverse; /* Cancel button ကို အောက်ပို့မည် */
+    flex-direction: column-reverse;
   }
 
   .pv-btn-verify-lg, .pv-btn-reject-lg {
