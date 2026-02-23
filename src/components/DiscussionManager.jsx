@@ -16,7 +16,7 @@ function DiscussionManager() {
         const data = await res.json();
         setDiscussions(data);
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error("Error fetching discussions:", err); }
   };
 
   useEffect(() => {
@@ -25,30 +25,40 @@ function DiscussionManager() {
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ FIX: `id` နှင့် `lesson_id` ပြဿနာကို ဖြေရှင်းထားသည်
+  // ✅ FIX: Data ခေါ်ယူရာတွင် အမှားအယွင်းမရှိစေရန် အထူးပြုပြင်ထားသည်
   const loadChat = async (lesson) => {
     setSelectedLesson(lesson);
-    const targetId = lesson.lesson_id || lesson.id; // API မှ လာသော ID အမှန်ကို ရှာယူမည်
+    
+    // API သို့ ပို့မည့် ID အမှန်ကို ရှာဖွေခြင်း (id မရှိပါက lesson_id ကို သုံးမည်)
+    const targetId = lesson.lesson_id || lesson.id; 
+    
+    if (!targetId) {
+        console.error("Lesson ID ပျောက်ဆုံးနေပါသည်:", lesson);
+        return;
+    }
 
     try {
       const res = await fetch(`https://myanedu-backend.onrender.com/admin/comments?lesson_id=${targetId}`);
       if (res.ok) {
         const data = await res.json();
+        console.log("👉 API မှ ပြန်လာသော စာများ:", data); // (လိုရမယ်ရ Error စစ်ရန်)
         
-        // ✅ FIX: Backend မှ Array အဖြစ်လာလာ၊ Object အဖြစ်လာလာ အမှားမတက်စေရန်
+        // Backend မှ မည်သည့် ပုံစံဖြင့် ပြန်လာစေကာမူ Array အဖြစ် ဖမ်းယူမည်
         let messages = [];
         if (Array.isArray(data)) {
             messages = data;
-        } else if (data && Array.isArray(data.comments)) {
-            messages = data.comments;
         } else if (data && Array.isArray(data.data)) {
             messages = data.data;
+        } else if (data && Array.isArray(data.comments)) {
+            messages = data.comments;
+        } else if (data && Array.isArray(data.messages)) {
+            messages = data.messages;
         }
         
         setChatHistory(messages);
         scrollToBottom();
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error("Error loading chat:", err); }
   };
 
   const scrollToBottom = () => {
@@ -75,7 +85,7 @@ function DiscussionManager() {
         body: JSON.stringify({
           lesson_id: targetId,
           message: reply,
-          comment: reply, // Backend လိုချင်သည့် နာမည်ကွဲလွဲနေပါက အဆင်ပြေစေရန် နှစ်မျိုးလုံးပို့ထားသည်
+          comment: reply, // Backend က လိုအပ်မည့် နာမည် (၂) မျိုးလုံးဖြင့် ပို့ပေးထားသည်
           user_role: 'admin'
         })
       });
@@ -83,12 +93,12 @@ function DiscussionManager() {
       if (res.ok) {
         setReply("");
         loadChat(selectedLesson); 
-        fetchDiscussions(); // Sidebar မှ message အရေအတွက်ကိုပါ တစ်ခါတည်း update လုပ်မည်
+        fetchDiscussions(); 
       } else {
-        alert("Failed to send message");
+        alert("စာပို့ခြင်း မအောင်မြင်ပါ။");
       }
     } catch (err) {
-      alert("Network Error");
+      alert("Network Error: အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပါ။");
     } finally {
       setLoading(false);
     }
@@ -112,12 +122,12 @@ function DiscussionManager() {
                 <div className="dm-empty-list">No discussions yet.</div>
             ) : (
                 discussions.map((d, index) => {
-                  const currentId = d.lesson_id || d.id || index;
+                  const currentId = d.lesson_id || d.id;
                   const isActive = selectedLesson && (selectedLesson.lesson_id || selectedLesson.id) === currentId;
                   
                   return (
                     <div 
-                        key={currentId} 
+                        key={currentId || index} 
                         onClick={() => loadChat(d)}
                         className={`dm-list-item ${isActive ? 'active' : ''}`}
                     >
@@ -164,20 +174,17 @@ function DiscussionManager() {
                     <div className="dm-empty-chat">No messages in this discussion yet.</div>
                 ) : (
                     chatHistory.map((c, index) => {
-                        const isAdmin = c.user_role === 'admin';
-                        const messageContent = c.message || c.comment || c.text || c.comment_text || "No content";
+                        // ✅ FIX: Backend မှ လာနိုင်သည့် Data Keys အားလုံးကို အလိုအလျောက် ဖမ်းယူမည်
+                        const isAdmin = c.user_role === 'admin' || c.role === 'admin' || c.isAdmin === true;
+                        const senderName = isAdmin ? 'You (Admin)' : `👤 ${c.user_name || c.student_name || c.name || 'Student'}`;
+                        const messageContent = c.message || c.comment || c.text || c.comment_text || c.content || "No content";
+                        const timeString = c.created_at ? new Date(c.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
 
                         return (
                             <div key={c.id || index} className={`dm-message-row ${isAdmin ? 'is-admin' : 'is-student'}`}>
-                                <div className="dm-message-sender">
-                                    {isAdmin ? 'You (Admin)' : `👤 ${c.user_name || 'Student'}`}
-                                </div>
-                                <div className="dm-message-bubble">
-                                    {messageContent}
-                                </div>
-                                <div className="dm-message-time">
-                                    {new Date(c.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                </div>
+                                <div className="dm-message-sender">{senderName}</div>
+                                <div className="dm-message-bubble">{messageContent}</div>
+                                {timeString && <div className="dm-message-time">{timeString}</div>}
                             </div>
                         );
                     })
