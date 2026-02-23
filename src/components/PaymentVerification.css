@@ -248,14 +248,14 @@
 }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE 
+   📱 MOBILE RESPONSIVE (FIXED GRID LAYOUT)
    ========================================= */
 @media screen and (max-width: 768px) {
   .pv-table thead {
     display: none;
   }
 
-  .pv-table, .pv-table tbody, .pv-table tr, .pv-table td {
+  .pv-table, .pv-table tbody, .pv-table tr {
     display: block;
     width: 100%;
     box-sizing: border-box;
@@ -266,21 +266,20 @@
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     background: white;
-    padding: 10px;
+    padding: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
 
+  /* ✅ ခေါင်းစဉ်နှင့် အဖြေကို နေရာလုခြင်းမရှိစေရန် Grid ဖြင့် အသေချထားသည် */
   .pv-table td {
-    display: flex;
-    justify-content: space-between; /* Space between label and value */
-    align-items: flex-start;
+    display: grid !important;
+    grid-template-columns: 80px 1fr; /* ဘယ်ဘက် ခေါင်းစဉ်အတွက် 80px ပေးပြီး ကျန်တာညာဘက်ကိုပေးမည် */
+    gap: 10px;
+    align-items: center;
     padding: 12px 10px;
     border-bottom: 1px solid #f3f4f6;
-    gap: 15px;
-  }
-
-  .pv-table th.pv-center, .pv-table td.pv-center {
-    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .pv-table td::before {
@@ -289,28 +288,26 @@
     color: #6b7280;
     font-size: 12px;
     text-transform: uppercase;
-    flex-shrink: 0;
     text-align: left;
-    margin-right: 10px;
   }
 
+  /* ✅ အဖြေများကို ညာဘက်သို့ သေချာစွာ တွန်းထားမည် */
   .pv-td-value {
-    flex: 1;
-    min-width: 0;
-    word-break: break-word;
-    text-align: right; /* Values align to right on mobile */
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Align flex children to right */
+    align-items: flex-end; 
+    text-align: right;
+    width: 100%;
+    word-break: break-word;
   }
 
   .pv-action-group {
     justify-content: flex-end;
     flex-wrap: wrap;
+    width: 100%;
   }
 
   .pv-table td:last-child {
     border-bottom: none;
-    padding-bottom: 5px;
   }
 }
