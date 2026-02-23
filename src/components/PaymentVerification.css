@@ -21,141 +21,119 @@
   text-align: center;
   padding: 40px;
   color: #6b7280;
-  background: #f9fafb;
+  background: white;
   border-radius: 12px;
   border: 1px dashed #d1d5db;
 }
 
-/* Utilities */
-.pv-fw-bold { font-weight: 700; }
-.pv-fw-medium { font-weight: 600; }
-.pv-text-dark { color: #1f2937; }
-.pv-text-gray { color: #6b7280; }
-.pv-text-blue { color: #2563eb; }
-.pv-text-small { font-size: 12px; }
-.pv-font-mono { font-family: monospace; }
-.pv-italic { font-style: italic; }
-.pv-mt-1 { margin-top: 4px; }
-.pv-center { text-align: center; }
-.pv-flex-col { display: flex; flex-direction: column; }
+/* =========================================
+   1. MAIN VIEW: CARD GRID (Premium Look)
+   ========================================= */
+.pv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
 
-/* Table Styles */
-.pv-table-wrapper {
+.pv-card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   border: 1px solid #e5e7eb;
-  overflow: hidden;
-  max-width: 100%;
-}
-
-.pv-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-
-.pv-table thead {
-  background: #f9fafb;
-}
-
-.pv-table th {
-  padding: 15px;
-  text-align: left;
-  font-size: 13px;
-  font-weight: 700;
-  color: #4b5563;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.pv-table th.pv-center {
-  text-align: center;
-}
-
-.pv-table td {
-  padding: 15px;
-  border-bottom: 1px solid #f3f4f6;
-  vertical-align: middle;
-}
-
-.pv-table tr:hover {
-  background: #f9fafb;
-}
-
-/* Badges & Buttons */
-.pv-method-badge {
-  font-size: 10px;
-  font-weight: 700;
-  color: #4b5563;
-  text-transform: uppercase;
-  background: #e5e7eb;
-  padding: 2px 6px;
-  border-radius: 4px;
-  display: inline-block;
-  width: fit-content;
-}
-
-.pv-payment-meta {
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-top: 5px;
+  overflow: hidden;
 }
 
-.pv-status-badge {
+.pv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  border-color: #bfdbfe;
+}
+
+.pv-card-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+}
+
+.pv-badge {
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  display: inline-block;
   letter-spacing: 0.5px;
 }
 
-.status-verified { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-.status-rejected { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-.status-pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+.bg-pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
+.bg-green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.bg-red { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+.bg-yellow { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
 
-.pv-btn-receipt {
-  background: #eff6ff;
-  color: #2563eb;
-  border: 1px solid #bfdbfe;
-  padding: 6px 12px;
-  border-radius: 6px;
+.pv-card-date {
   font-size: 12px;
+  color: #9ca3af;
   font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
 }
 
-.pv-btn-receipt:hover { background: #dbeafe; }
-
-.pv-action-group {
+.pv-card-body {
+  padding: 20px;
   display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.pv-card-icon {
+  font-size: 30px;
+  background: #eff6ff;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 8px;
+  border-radius: 10px;
 }
 
-.pv-btn-verify, .pv-btn-reject {
-  padding: 6px 10px;
-  border-radius: 6px;
+.pv-card-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.pv-card-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.pv-card-footer {
+  padding: 12px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #f3f4f6;
+  text-align: right;
+}
+
+.pv-card-footer span {
   font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
+  font-weight: 700;
+  color: #2563eb;
 }
 
-.pv-btn-verify { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-.pv-btn-verify:hover { background: #dcfce7; }
-
-.pv-btn-reject { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-.pv-btn-reject:hover { background: #fee2e2; }
-
-/* Modal Styles */
+/* =========================================
+   2. PREMIUM DETAILS MODAL
+   ========================================= */
 .pv-modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
@@ -168,17 +146,17 @@
   background-color: white;
   border-radius: 16px;
   overflow: hidden;
-  max-width: 500px;
+  max-width: 700px;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  animation: popIn 0.3s ease-out;
+  animation: slideUp 0.3s ease-out;
 }
 
 .pv-modal-header {
-  padding: 15px 20px;
+  padding: 20px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
@@ -188,8 +166,8 @@
 
 .pv-modal-header h3 {
   margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: #1f2937;
 }
 
@@ -216,98 +194,169 @@
   height: 18px;
 }
 
-.pv-modal-body {
-  padding: 15px;
-  background-color: white;
+/* Modal Content Grid */
+.pv-modal-content {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.pv-details-section {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pv-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #f3f4f6;
+}
+
+.pv-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.pv-value {
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.pv-amount {
+  font-size: 18px;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+.pv-method {
+  display: inline-block;
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.pv-receipt-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pv-receipt-wrapper {
+  flex: 1;
+  background: #f3f4f6;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+  display: flex;
   align-items: center;
-  overflow: auto;
+  justify-content: center;
+  overflow: hidden;
+  padding: 5px;
+  min-height: 200px;
 }
 
 .pv-receipt-img {
   max-width: 100%;
-  max-height: 70vh;
-  border-radius: 8px;
+  max-height: 350px;
   object-fit: contain;
-  border: 1px solid #f3f4f6;
+  border-radius: 4px;
 }
 
-.pv-error-msg {
-  color: #dc2626;
-  background: #fee2e2;
-  padding: 15px;
+.pv-no-receipt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+  font-style: italic;
+  min-height: 200px;
+}
+
+/* Modal Actions */
+.pv-modal-actions {
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+.pv-btn-verify-lg, .pv-btn-reject-lg {
+  padding: 12px 25px;
   border-radius: 8px;
   font-size: 14px;
-  text-align: center;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
 }
 
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.pv-btn-verify-lg {
+  background: #16a34a;
+  color: white;
+  flex: 2;
+}
+.pv-btn-verify-lg:hover { background: #15803d; }
+
+.pv-btn-reject-lg {
+  background: #fee2e2;
+  color: #dc2626;
+  flex: 1;
+}
+.pv-btn-reject-lg:hover { background: #fecaca; }
+
+.pv-action-taken {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Common Text Helpers */
+.pv-fw-bold { font-weight: 700; }
+.pv-text-blue { color: #2563eb; }
+.pv-font-mono { font-family: monospace; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE (FIXED GRID LAYOUT)
+   📱 MOBILE RESPONSIVE 
    ========================================= */
 @media screen and (max-width: 768px) {
-  .pv-table thead {
-    display: none;
+  .pv-modal-content {
+    grid-template-columns: 1fr; /* ဖုန်းတွင် အပေါ်အောက် ပြောင်းမည် */
   }
 
-  .pv-table, .pv-table tbody, .pv-table tr {
-    display: block;
+  .pv-receipt-img {
+    max-height: 250px;
+  }
+
+  .pv-modal-actions {
+    flex-direction: column-reverse; /* Cancel button ကို အောက်ပို့မည် */
+  }
+
+  .pv-btn-verify-lg, .pv-btn-reject-lg {
     width: 100%;
-    box-sizing: border-box;
-  }
-
-  .pv-table tr {
-    margin-bottom: 15px;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    background: white;
-    padding: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  }
-
-  /* ✅ ခေါင်းစဉ်နှင့် အဖြေကို နေရာလုခြင်းမရှိစေရန် Grid ဖြင့် အသေချထားသည် */
-  .pv-table td {
-    display: grid !important;
-    grid-template-columns: 80px 1fr; /* ဘယ်ဘက် ခေါင်းစဉ်အတွက် 80px ပေးပြီး ကျန်တာညာဘက်ကိုပေးမည် */
-    gap: 10px;
-    align-items: center;
-    padding: 12px 10px;
-    border-bottom: 1px solid #f3f4f6;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .pv-table td::before {
-    content: attr(data-label);
-    font-weight: 700;
-    color: #6b7280;
-    font-size: 12px;
-    text-transform: uppercase;
-    text-align: left;
-  }
-
-  /* ✅ အဖြေများကို ညာဘက်သို့ သေချာစွာ တွန်းထားမည် */
-  .pv-td-value {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; 
-    text-align: right;
-    width: 100%;
-    word-break: break-word;
-  }
-
-  .pv-action-group {
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .pv-table td:last-child {
-    border-bottom: none;
+    padding: 15px;
   }
 }

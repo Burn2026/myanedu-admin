@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './PaymentVerification.css'; // ✅ သီးသန့် CSS ဖိုင်ချိတ်ဆက်ထားသည်
+import './PaymentVerification.css'; 
 
-// Heroicons Close Icon
 const CloseIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="pv-close-icon">
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -11,7 +10,9 @@ const CloseIcon = () => (
 function PaymentVerification() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(null);
+  
+  // ✅ ရိုးရိုး Image အစား Payment တစ်ခုလုံးကို သိမ်းမည့် State
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   const API_URL = "https://myanedu-backend.onrender.com";
 
@@ -46,6 +47,7 @@ function PaymentVerification() {
       if (res.ok) {
         alert(`Payment has been successfully ${status}!`);
         fetchPayments();
+        setSelectedPayment(null); // ✅ လုပ်ဆောင်ပြီးပါက Modal ကို ပိတ်မည်
       } else {
         alert("Failed to update status.");
       }
@@ -77,144 +79,122 @@ function PaymentVerification() {
       ) : payments.length === 0 ? (
         <div className="pv-empty">No payment records found.</div>
       ) : (
-        <div className="pv-table-wrapper">
-          <table className="pv-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Student</th>
-                <th>Course</th>
-                <th>Payment Info</th> 
-                <th>Receipt</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            
-            <tbody>
-              {payments.map((p) => (
-                <tr key={p.id}>
-                   
-                    {/* Date */}
-                    <td data-label="Date" className="pv-text-gray">
-                      <div className="pv-td-value">
-                          {new Date(p.payment_date).toLocaleDateString()}
-                      </div>
-                    </td>
-                    
-                    {/* Student */}
-                    <td data-label="Student">
-                        <div className="pv-td-value pv-flex-col">
-                            <span className="pv-fw-bold pv-text-dark">{p.student_name}</span>
-                            <span className="pv-text-small pv-text-blue pv-font-mono">{p.phone_primary}</span>
-                        </div>
-                    </td>
-                    
-                    {/* Course */}
-                    <td data-label="Course">
-                        <div className="pv-td-value pv-flex-col">
-                            <span className="pv-fw-medium pv-text-dark">{p.course_name}</span>
-                            <span className="pv-text-small pv-text-gray">{p.batch_name}</span>
-                        </div>
-                    </td>
-                    
-                    {/* Payment Info */}
-                    <td data-label="Amount">
-                        <div className="pv-td-value pv-flex-col">
-                            <span className="pv-fw-bold pv-text-blue">{Number(p.amount).toLocaleString()} Ks</span>
-                            <div className="pv-payment-meta">
-                                <span className="pv-method-badge">{p.payment_method}</span>
-                                {p.transaction_id ? (
-                                    <span className="pv-text-small pv-text-gray pv-mt-1">
-                                        TID: <span className="pv-font-mono pv-fw-bold pv-text-dark">{p.transaction_id}</span>
-                                    </span>
-                                ) : (
-                                    <span className="pv-text-small pv-text-gray pv-italic pv-mt-1">No Trans ID</span>
-                                )}
-                            </div>
-                        </div>
-                    </td>
-                    
-                    {/* Receipt */}
-                    <td data-label="Receipt" className="pv-center">
-                        <div className="pv-td-value">
-                            {p.receipt_image ? (
-                                <button 
-                                    onClick={() => setSelectedImage(p.receipt_image)}
-                                    className="pv-btn-receipt"
-                                >
-                                    📸 View
-                                </button>
-                            ) : (
-                                <span className="pv-text-small pv-text-gray pv-italic">N/A</span>
-                            )}
-                        </div>
-                    </td>
+        /* ✅ Table အစား Card Grid ဖြင့် ပြသခြင်း */
+        <div className="pv-grid">
+          {payments.map((p) => (
+            <div 
+                key={p.id} 
+                className="pv-card" 
+                onClick={() => setSelectedPayment(p)} // နှိပ်လိုက်လျှင် Modal ပေါ်မည်
+            >
+                <div className="pv-card-header">
+                    <span className={`pv-badge ${
+                        p.status === 'verified' ? 'bg-green' : 
+                        p.status === 'rejected' ? 'bg-red' : 'bg-yellow'
+                    }`}>
+                        {p.status}
+                    </span>
+                    <span className="pv-card-date">{new Date(p.payment_date).toLocaleDateString()}</span>
+                </div>
+                
+                <div className="pv-card-body">
+                    <div className="pv-card-icon">📘</div>
+                    <div className="pv-card-info">
+                        <h4>{p.course_name}</h4>
+                        <p>{p.batch_name}</p>
+                    </div>
+                </div>
 
-                    {/* Status */}
-                    <td data-label="Status" className="pv-center">
-                      <div className="pv-td-value">
-                          <span className={`pv-status-badge ${
-                              p.status === 'verified' ? 'status-verified' : 
-                              p.status === 'rejected' ? 'status-rejected' : 
-                              'status-pending'
-                          }`}>
-                            {p.status}
-                          </span>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td data-label="Action" className="pv-actions-cell">
-                        <div className="pv-td-value pv-action-group">
-                            {p.status === 'pending' ? (
-                                <>
-                                    <button 
-                                        onClick={() => handleStatusChange(p.id, 'verified')} 
-                                        className="pv-btn-verify"
-                                    >
-                                        Verify ✅
-                                    </button>
-                                    <button 
-                                        onClick={() => handleStatusChange(p.id, 'rejected')} 
-                                        className="pv-btn-reject"
-                                    >
-                                        Reject ❌
-                                    </button>
-                                </>
-                            ) : (
-                                <span className="pv-text-small pv-text-gray pv-italic">Action Taken</span>
-                            )}
-                        </div>
-                    </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                <div className="pv-card-footer">
+                    <span>View Details &rarr;</span>
+                </div>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* --- RECEIPT MODAL --- */}
-      {selectedImage && (
-        <div className="pv-modal-overlay" onClick={() => setSelectedImage(null)}>
+      {/* --- ✅ PREMIUM PAYMENT DETAILS MODAL --- */}
+      {selectedPayment && (
+        <div className="pv-modal-overlay" onClick={() => setSelectedPayment(null)}>
             <div className="pv-modal-box" onClick={(e) => e.stopPropagation()}>
+                
                 <div className="pv-modal-header">
-                    <h3>📄 Payment Receipt</h3>
-                    <button onClick={() => setSelectedImage(null)} className="pv-btn-close">
+                    <h3>Payment Details</h3>
+                    <button onClick={() => setSelectedPayment(null)} className="pv-btn-close">
                         <CloseIcon />
                     </button>
                 </div>
-                <div className="pv-modal-body">
-                    <img 
-                        src={getImageUrl(selectedImage)} 
-                        alt="Evidence" 
-                        className="pv-receipt-img"
-                        onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentNode.innerHTML += `<div class="pv-error-msg">🚨 Unable to load receipt image.</div>`;
-                        }}
-                    />
+
+                <div className="pv-modal-content">
+                    {/* ဘယ်ဘက် - အချက်အလက်များ */}
+                    <div className="pv-details-section">
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Student Name:</span>
+                            <span className="pv-value pv-fw-bold">{selectedPayment.student_name}</span>
+                        </div>
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Phone:</span>
+                            <span className="pv-value pv-text-blue">{selectedPayment.phone_primary}</span>
+                        </div>
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Course:</span>
+                            <span className="pv-value">{selectedPayment.course_name} ({selectedPayment.batch_name})</span>
+                        </div>
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Amount:</span>
+                            <span className="pv-value pv-amount">{Number(selectedPayment.amount).toLocaleString()} Ks</span>
+                        </div>
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Method:</span>
+                            <span className="pv-value pv-method">{selectedPayment.payment_method}</span>
+                        </div>
+                        <div className="pv-detail-row">
+                            <span className="pv-label">Trans ID:</span>
+                            <span className="pv-value pv-font-mono">{selectedPayment.transaction_id || 'N/A'}</span>
+                        </div>
+                    </div>
+
+                    {/* ညာဘက်/အောက်ဘက် - ပြေစာပုံ */}
+                    <div className="pv-receipt-section">
+                        <span className="pv-label">Receipt Image:</span>
+                        {selectedPayment.receipt_image ? (
+                            <div className="pv-receipt-wrapper">
+                                <img 
+                                    src={getImageUrl(selectedPayment.receipt_image)} 
+                                    alt="Receipt" 
+                                    className="pv-receipt-img"
+                                />
+                            </div>
+                        ) : (
+                            <div className="pv-no-receipt">No Receipt Uploaded</div>
+                        )}
+                    </div>
                 </div>
+
+                {/* အောက်ဆုံး - Action Buttons */}
+                <div className="pv-modal-actions">
+                    {selectedPayment.status === 'pending' ? (
+                        <>
+                            <button 
+                                onClick={() => handleStatusChange(selectedPayment.id, 'rejected')} 
+                                className="pv-btn-reject-lg"
+                            >
+                                ❌ Reject
+                            </button>
+                            <button 
+                                onClick={() => handleStatusChange(selectedPayment.id, 'verified')} 
+                                className="pv-btn-verify-lg"
+                            >
+                                ✅ Verify Payment
+                            </button>
+                        </>
+                    ) : (
+                        <div className="pv-action-taken">
+                            Status: <span className={`pv-badge ${selectedPayment.status === 'verified' ? 'bg-green' : 'bg-red'}`}>{selectedPayment.status}</span>
+                        </div>
+                    )}
+                </div>
+
             </div>
         </div>
       )}
