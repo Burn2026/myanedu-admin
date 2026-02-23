@@ -130,10 +130,11 @@
 /* =========================================
    2. PREMIUM DETAILS MODAL
    ========================================= */
+/* ✅ Modal မျက်နှာပြင်အလယ်တည့်တည့်ဖြစ်စေရန် အသေအချာပြင်ဆင်ထားသည် */
 .pv-modal-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
@@ -148,15 +149,16 @@
   overflow: hidden;
   max-width: 700px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 85vh; /* ✅ ဖုန်းစခရင်အောက်မကပ်စေရန် 85vh သို့လျှော့ထားသည် */
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s ease-out;
+  margin: auto;
 }
 
 .pv-modal-header {
-  padding: 20px;
+  padding: 18px 20px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
@@ -171,39 +173,30 @@
   color: #1f2937;
 }
 
-/* ✅ Close Button Styling (Updated for better visibility) */
 .pv-btn-close {
   background: #e5e7eb;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #374151; /* Darker gray color for the icon */
   transition: 0.2s;
+  padding: 0;
 }
 
 .pv-btn-close:hover {
   background: #d1d5db;
-  color: #111827; /* Even darker on hover */
 }
 
-/* ✅ Close Icon SVG Styling */
-.pv-close-icon {
-  width: 20px; /* Slightly larger icon */
-  height: 20px;
-}
-
-/* Modal Content Grid */
 .pv-modal-content {
   padding: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  overflow-y: auto;
+  overflow-y: auto; /* ✅ Content များလျှင် Scroll လုပ်နိုင်သည် */
 }
 
 .pv-details-section {
@@ -271,9 +264,18 @@
 
 .pv-receipt-img {
   max-width: 100%;
-  max-height: 350px;
+  max-height: 300px;
   object-fit: contain;
   border-radius: 4px;
+}
+
+/* ✅ ဓာတ်ပုံကို နှိပ်၍ရကြောင်းပြသည့် Cursor */
+.pv-clickable-img {
+  cursor: zoom-in;
+  transition: transform 0.2s;
+}
+.pv-clickable-img:hover {
+  transform: scale(1.02);
 }
 
 .pv-no-receipt {
@@ -290,9 +292,8 @@
   min-height: 200px;
 }
 
-/* Modal Actions */
 .pv-modal-actions {
-  padding: 20px;
+  padding: 15px 20px;
   border-top: 1px solid #e5e7eb;
   background: white;
   display: flex;
@@ -310,18 +311,10 @@
   border: none;
 }
 
-.pv-btn-verify-lg {
-  background: #16a34a;
-  color: white;
-  flex: 2;
-}
+.pv-btn-verify-lg { background: #16a34a; color: white; flex: 2; }
 .pv-btn-verify-lg:hover { background: #15803d; }
 
-.pv-btn-reject-lg {
-  background: #fee2e2;
-  color: #dc2626;
-  flex: 1;
-}
+.pv-btn-reject-lg { background: #fee2e2; color: #dc2626; flex: 1; }
 .pv-btn-reject-lg:hover { background: #fecaca; }
 
 .pv-action-taken {
@@ -332,7 +325,6 @@
   color: #6b7280;
 }
 
-/* Common Text Helpers */
 .pv-fw-bold { font-weight: 700; }
 .pv-text-blue { color: #2563eb; }
 .pv-font-mono { font-family: monospace; }
@@ -340,6 +332,58 @@
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =========================================
+   🌟 FULLSCREEN IMAGE LIGHTBOX
+   ========================================= */
+.pv-lightbox-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.92);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  animation: popIn 0.2s ease-out;
+}
+
+.pv-lightbox-img {
+  max-width: 100%;
+  max-height: 95vh;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: zoom-out;
+}
+
+.pv-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 10001;
+}
+
+.pv-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* =========================================
@@ -351,7 +395,7 @@
   }
 
   .pv-receipt-img {
-    max-height: 250px;
+    max-height: 220px;
   }
 
   .pv-modal-actions {

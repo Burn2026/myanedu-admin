@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './PaymentVerification.css'; 
 
-// ✅ အမှားခြစ် (X) Icon Component
+// ✅ FIX: အမှားခြစ် (X) Icon ကို မည်သည့်ဖုန်းတွင်မဆို ထင်ရှားစွာပေါ်စေရန် stroke="#4b5563" ဖြင့် အသေသတ်မှတ်ထားသည်
 const CloseIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="pv-close-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#4b5563" strokeWidth={2.5} width="20" height="20">
     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
@@ -12,10 +12,12 @@ function PaymentVerification() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPayment, setSelectedPayment] = useState(null);
+  
+  // ✅ FIX: ဓာတ်ပုံကို မျက်နှာပြင်အပြည့်ဖြင့် ကြည့်ရန် State အသစ်
+  const [fullscreenImage, setFullscreenImage] = useState(null);
 
   const API_URL = "https://myanedu-backend.onrender.com";
 
-  // Admin ငွေလက်ခံမည့် အကောင့်များ
   const getAdminAccount = (method) => {
     if (!method) return "Unknown";
     const m = method.toLowerCase();
@@ -25,7 +27,7 @@ function PaymentVerification() {
     if (m.includes('aya')) return "09111222333 (U Aung - AYA Pay)";
     if (m.includes('cb')) return "09444555666 (Daw Su - CB Pay)";
     
-    return "09XXXXXXXXX (Default Account)";
+    return "09XXXXXXXXX (Default Account)"; 
   };
 
   useEffect(() => {
@@ -71,12 +73,9 @@ function PaymentVerification() {
   const getImageUrl = (path) => {
     if (!path || path === "null" || path === "undefined") return null;
     let cleanPath = String(path).trim().replace(/\\/g, '/');
-    
     const httpIndex = cleanPath.indexOf("http");
     if (httpIndex !== -1) return cleanPath.substring(httpIndex);
-    
     if (cleanPath.includes("cloudinary.com")) return `https://${cleanPath.replace(/^\/+/, '')}`;
-    
     return `${API_URL}/${cleanPath.replace(/^\/+/, '')}`;
   };
 
@@ -131,14 +130,12 @@ function PaymentVerification() {
                 
                 <div className="pv-modal-header">
                     <h3>Payment Details</h3>
-                    {/* ✅ Close Button with Icon */}
                     <button onClick={() => setSelectedPayment(null)} className="pv-btn-close">
                         <CloseIcon />
                     </button>
                 </div>
 
                 <div className="pv-modal-content">
-                    {/* ဘယ်ဘက် - အချက်အလက်များ */}
                     <div className="pv-details-section">
                         <div className="pv-detail-row">
                             <span className="pv-label">Student Name:</span>
@@ -160,27 +157,25 @@ function PaymentVerification() {
                             <span className="pv-label">Method:</span>
                             <span className="pv-value pv-method">{selectedPayment.payment_method}</span>
                         </div>
-                        
                         <div className="pv-detail-row" style={{ backgroundColor: '#eff6ff', borderColor: '#bfdbfe' }}>
                             <span className="pv-label" style={{ color: '#2563eb' }}>Received To (Admin A/C):</span>
                             <span className="pv-value pv-fw-bold">{getAdminAccount(selectedPayment.payment_method)}</span>
                         </div>
-
                         <div className="pv-detail-row">
                             <span className="pv-label">Trans ID:</span>
                             <span className="pv-value pv-font-mono">{selectedPayment.transaction_id || 'N/A'}</span>
                         </div>
                     </div>
 
-                    {/* ညာဘက်/အောက်ဘက် - ပြေစာပုံ */}
                     <div className="pv-receipt-section">
-                        <span className="pv-label">Receipt Image:</span>
+                        <span className="pv-label">Receipt Image (Click to zoom):</span>
                         {selectedPayment.receipt_image ? (
                             <div className="pv-receipt-wrapper">
                                 <img 
                                     src={getImageUrl(selectedPayment.receipt_image)} 
                                     alt="Receipt" 
-                                    className="pv-receipt-img"
+                                    className="pv-receipt-img pv-clickable-img"
+                                    onClick={() => setFullscreenImage(getImageUrl(selectedPayment.receipt_image))} // ✅ ပုံကိုနှိပ်လျှင် ချဲ့ပြမည်
                                 />
                             </div>
                         ) : (
@@ -189,20 +184,13 @@ function PaymentVerification() {
                     </div>
                 </div>
 
-                {/* အောက်ဆုံး - Action Buttons */}
                 <div className="pv-modal-actions">
                     {selectedPayment.status === 'pending' ? (
                         <>
-                            <button 
-                                onClick={() => handleStatusChange(selectedPayment.id, 'rejected')} 
-                                className="pv-btn-reject-lg"
-                            >
+                            <button onClick={() => handleStatusChange(selectedPayment.id, 'rejected')} className="pv-btn-reject-lg">
                                 ❌ Reject
                             </button>
-                            <button 
-                                onClick={() => handleStatusChange(selectedPayment.id, 'verified')} 
-                                className="pv-btn-verify-lg"
-                            >
+                            <button onClick={() => handleStatusChange(selectedPayment.id, 'verified')} className="pv-btn-verify-lg">
                                 ✅ Verify Payment
                             </button>
                         </>
@@ -215,6 +203,21 @@ function PaymentVerification() {
 
             </div>
         </div>
+      )}
+
+      {/* --- ✅ FULLSCREEN IMAGE LIGHTBOX (ပုံကို အပြည့်ချဲ့ကြည့်ရန်) --- */}
+      {fullscreenImage && (
+          <div className="pv-lightbox-overlay" onClick={() => setFullscreenImage(null)}>
+              <button className="pv-lightbox-close" onClick={() => setFullscreenImage(null)}>
+                 ✕
+              </button>
+              <img 
+                  src={fullscreenImage} 
+                  alt="Fullscreen Receipt" 
+                  className="pv-lightbox-img" 
+                  onClick={(e) => e.stopPropagation()} 
+              />
+          </div>
       )}
 
     </div>
