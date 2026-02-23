@@ -25,19 +25,32 @@ function DiscussionManager() {
     return () => clearInterval(interval);
   }, []);
 
+  // ✅ FIX: `id` နှင့် `lesson_id` ပြဿနာကို ဖြေရှင်းထားသည်
   const loadChat = async (lesson) => {
     setSelectedLesson(lesson);
+    const targetId = lesson.lesson_id || lesson.id; // API မှ လာသော ID အမှန်ကို ရှာယူမည်
+
     try {
-      const res = await fetch(`https://myanedu-backend.onrender.com/admin/comments?lesson_id=${lesson.id}`);
+      const res = await fetch(`https://myanedu-backend.onrender.com/admin/comments?lesson_id=${targetId}`);
       if (res.ok) {
         const data = await res.json();
-        setChatHistory(data);
+        
+        // ✅ FIX: Backend မှ Array အဖြစ်လာလာ၊ Object အဖြစ်လာလာ အမှားမတက်စေရန်
+        let messages = [];
+        if (Array.isArray(data)) {
+            messages = data;
+        } else if (data && Array.isArray(data.comments)) {
+            messages = data.comments;
+        } else if (data && Array.isArray(data.data)) {
+            messages = data.data;
+        }
+        
+        setChatHistory(messages);
         scrollToBottom();
       }
     } catch (err) { console.error(err); }
   };
 
-  // စာအသစ်ဝင်လာတိုင်း အောက်ဆုံးသို့ အလိုအလျောက် ရွှေ့ပေးမည်
   const scrollToBottom = () => {
     setTimeout(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -53,24 +66,29 @@ function DiscussionManager() {
     if (!reply.trim() || !selectedLesson) return;
 
     setLoading(true);
+    const targetId = selectedLesson.lesson_id || selectedLesson.id;
+
     try {
       const res = await fetch('https://myanedu-backend.onrender.com/admin/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          lesson_id: selectedLesson.id,
-          // Backend က message လို့တောင်းတာလား comment လို့တောင်းတာလား သေချာစေရန် နှစ်ခုလုံးပို့ထားပါသည်
+          lesson_id: targetId,
           message: reply,
-          comment: reply 
+          comment: reply, // Backend လိုချင်သည့် နာမည်ကွဲလွဲနေပါက အဆင်ပြေစေရန် နှစ်မျိုးလုံးပို့ထားသည်
+          user_role: 'admin'
         })
       });
 
       if (res.ok) {
         setReply("");
         loadChat(selectedLesson); 
+        fetchDiscussions(); // Sidebar မှ message အရေအတွက်ကိုပါ တစ်ခါတည်း update လုပ်မည်
+      } else {
+        alert("Failed to send message");
       }
     } catch (err) {
-      alert("Failed to send reply");
+      alert("Network Error");
     } finally {
       setLoading(false);
     }
@@ -93,23 +111,28 @@ function DiscussionManager() {
             {discussions.length === 0 ? (
                 <div className="dm-empty-list">No discussions yet.</div>
             ) : (
-                discussions.map(d => (
-                <div 
-                    key={d.id} 
-                    onClick={() => loadChat(d)}
-                    className={`dm-list-item ${selectedLesson?.id === d.id ? 'active' : ''}`}
-                >
-                    <div className="dm-item-course">
-                        {d.course_name} • {d.batch_name}
+                discussions.map((d, index) => {
+                  const currentId = d.lesson_id || d.id || index;
+                  const isActive = selectedLesson && (selectedLesson.lesson_id || selectedLesson.id) === currentId;
+                  
+                  return (
+                    <div 
+                        key={currentId} 
+                        onClick={() => loadChat(d)}
+                        className={`dm-list-item ${isActive ? 'active' : ''}`}
+                    >
+                        <div className="dm-item-course">
+                            {d.course_name} • {d.batch_name}
+                        </div>
+                        <div className="dm-item-title">
+                            📺 {d.lesson_title}
+                        </div>
+                        <div className="dm-item-count">
+                            <span className="dm-badge">{d.total_comments} message(s)</span>
+                        </div>
                     </div>
-                    <div className="dm-item-title">
-                        📺 {d.lesson_title}
-                    </div>
-                    <div className="dm-item-count">
-                        <span className="dm-badge">{d.total_comments} message(s)</span>
-                    </div>
-                </div>
-                ))
+                  );
+                })
             )}
           </div>
         </div>
@@ -140,13 +163,12 @@ function DiscussionManager() {
                 {chatHistory.length === 0 ? (
                     <div className="dm-empty-chat">No messages in this discussion yet.</div>
                 ) : (
-                    chatHistory.map(c => {
+                    chatHistory.map((c, index) => {
                         const isAdmin = c.user_role === 'admin';
-                        // ✅ FIX: Backend မှ message (သို့) comment (သို့) text ကြိုက်သည့်နာမည်ဖြင့်လာပါစေ ဖမ်းယူပြသပေးမည်
                         const messageContent = c.message || c.comment || c.text || c.comment_text || "No content";
 
                         return (
-                            <div key={c.id} className={`dm-message-row ${isAdmin ? 'is-admin' : 'is-student'}`}>
+                            <div key={c.id || index} className={`dm-message-row ${isAdmin ? 'is-admin' : 'is-student'}`}>
                                 <div className="dm-message-sender">
                                     {isAdmin ? 'You (Admin)' : `👤 ${c.user_name || 'Student'}`}
                                 </div>
