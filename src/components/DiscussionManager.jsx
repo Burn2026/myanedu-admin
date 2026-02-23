@@ -14,7 +14,11 @@ function DiscussionManager() {
       const res = await fetch('https://myanedu-backend.onrender.com/admin/discussions');
       if (res.ok) {
         const data = await res.json();
-        setDiscussions(data);
+        
+        // ✅ FIX: စာမဝင်ထားသော (0 message) သင်ခန်းစာများကို ဖျောက်ထားရန် Filter လုပ်ခြင်း
+        const activeDiscussions = data.filter(d => Number(d.total_comments) > 0);
+        
+        setDiscussions(activeDiscussions); // Filter လုပ်ပြီးသားကိုသာ ပြသမည်
       }
     } catch (err) { console.error("Error fetching discussions:", err); }
   };
@@ -25,11 +29,9 @@ function DiscussionManager() {
     return () => clearInterval(interval);
   }, []);
 
-  // ✅ FIX: Data ခေါ်ယူရာတွင် အမှားအယွင်းမရှိစေရန် အထူးပြုပြင်ထားသည်
   const loadChat = async (lesson) => {
     setSelectedLesson(lesson);
     
-    // API သို့ ပို့မည့် ID အမှန်ကို ရှာဖွေခြင်း (id မရှိပါက lesson_id ကို သုံးမည်)
     const targetId = lesson.lesson_id || lesson.id; 
     
     if (!targetId) {
@@ -41,9 +43,7 @@ function DiscussionManager() {
       const res = await fetch(`https://myanedu-backend.onrender.com/admin/comments?lesson_id=${targetId}`);
       if (res.ok) {
         const data = await res.json();
-        console.log("👉 API မှ ပြန်လာသော စာများ:", data); // (လိုရမယ်ရ Error စစ်ရန်)
         
-        // Backend မှ မည်သည့် ပုံစံဖြင့် ပြန်လာစေကာမူ Array အဖြစ် ဖမ်းယူမည်
         let messages = [];
         if (Array.isArray(data)) {
             messages = data;
@@ -85,7 +85,7 @@ function DiscussionManager() {
         body: JSON.stringify({
           lesson_id: targetId,
           message: reply,
-          comment: reply, // Backend က လိုအပ်မည့် နာမည် (၂) မျိုးလုံးဖြင့် ပို့ပေးထားသည်
+          comment: reply, 
           user_role: 'admin'
         })
       });
@@ -119,7 +119,7 @@ function DiscussionManager() {
           </div>
           <div className="dm-sidebar-list">
             {discussions.length === 0 ? (
-                <div className="dm-empty-list">No discussions yet.</div>
+                <div className="dm-empty-list">No new questions yet.</div>
             ) : (
                 discussions.map((d, index) => {
                   const currentId = d.lesson_id || d.id;
@@ -174,7 +174,6 @@ function DiscussionManager() {
                     <div className="dm-empty-chat">No messages in this discussion yet.</div>
                 ) : (
                     chatHistory.map((c, index) => {
-                        // ✅ FIX: Backend မှ လာနိုင်သည့် Data Keys အားလုံးကို အလိုအလျောက် ဖမ်းယူမည်
                         const isAdmin = c.user_role === 'admin' || c.role === 'admin' || c.isAdmin === true;
                         const senderName = isAdmin ? 'You (Admin)' : `👤 ${c.user_name || c.student_name || c.name || 'Student'}`;
                         const messageContent = c.message || c.comment || c.text || c.comment_text || c.content || "No content";
