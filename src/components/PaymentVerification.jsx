@@ -10,11 +10,22 @@ const CloseIcon = () => (
 function PaymentVerification() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // ✅ ရိုးရိုး Image အစား Payment တစ်ခုလုံးကို သိမ်းမည့် State
   const [selectedPayment, setSelectedPayment] = useState(null);
 
   const API_URL = "https://myanedu-backend.onrender.com";
+
+  // ✅ Admin ၏ ငွေလက်ခံမည့် ဖုန်းနံပါတ်များကို ဤနေရာတွင် မိမိအမှန်တကယ်အသုံးပြုမည့် နံပါတ်များဖြင့် ပြင်ဆင်ပါ
+  const getAdminAccount = (method) => {
+    if (!method) return "Unknown";
+    const m = method.toLowerCase();
+    
+    if (m.includes('kpay') || m.includes('kbz')) return "09123456789 (U Hla - KPay)";
+    if (m.includes('wave')) return "09987654321 (Daw Mya - WavePay)";
+    if (m.includes('aya')) return "09111222333 (U Aung - AYA Pay)";
+    if (m.includes('cb')) return "09444555666 (Daw Su - CB Pay)";
+    
+    return "09XXXXXXXXX (Default Account)"; // အခြားနည်းလမ်းများအတွက်
+  };
 
   useEffect(() => {
     fetchPayments();
@@ -47,7 +58,7 @@ function PaymentVerification() {
       if (res.ok) {
         alert(`Payment has been successfully ${status}!`);
         fetchPayments();
-        setSelectedPayment(null); // ✅ လုပ်ဆောင်ပြီးပါက Modal ကို ပိတ်မည်
+        setSelectedPayment(null); 
       } else {
         alert("Failed to update status.");
       }
@@ -79,13 +90,12 @@ function PaymentVerification() {
       ) : payments.length === 0 ? (
         <div className="pv-empty">No payment records found.</div>
       ) : (
-        /* ✅ Table အစား Card Grid ဖြင့် ပြသခြင်း */
         <div className="pv-grid">
           {payments.map((p) => (
             <div 
                 key={p.id} 
                 className="pv-card" 
-                onClick={() => setSelectedPayment(p)} // နှိပ်လိုက်လျှင် Modal ပေါ်မည်
+                onClick={() => setSelectedPayment(p)} 
             >
                 <div className="pv-card-header">
                     <span className={`pv-badge ${
@@ -113,7 +123,7 @@ function PaymentVerification() {
         </div>
       )}
 
-      {/* --- ✅ PREMIUM PAYMENT DETAILS MODAL --- */}
+      {/* --- PREMIUM PAYMENT DETAILS MODAL --- */}
       {selectedPayment && (
         <div className="pv-modal-overlay" onClick={() => setSelectedPayment(null)}>
             <div className="pv-modal-box" onClick={(e) => e.stopPropagation()}>
@@ -148,6 +158,13 @@ function PaymentVerification() {
                             <span className="pv-label">Method:</span>
                             <span className="pv-value pv-method">{selectedPayment.payment_method}</span>
                         </div>
+                        
+                        {/* ✅ ထပ်ထည့်ထားသော Admin အကောင့် ဖုန်းနံပါတ် ပြသသည့်နေရာ (ထင်ရှားစေရန် အရောင်ခွဲထားသည်) */}
+                        <div className="pv-detail-row" style={{ backgroundColor: '#eff6ff', borderColor: '#bfdbfe' }}>
+                            <span className="pv-label" style={{ color: '#2563eb' }}>Received To (Admin A/C):</span>
+                            <span className="pv-value pv-fw-bold">{getAdminAccount(selectedPayment.payment_method)}</span>
+                        </div>
+
                         <div className="pv-detail-row">
                             <span className="pv-label">Trans ID:</span>
                             <span className="pv-value pv-font-mono">{selectedPayment.transaction_id || 'N/A'}</span>
