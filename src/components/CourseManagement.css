@@ -37,15 +37,6 @@
   border-bottom-color: #2563eb;
 }
 
-.cm-tab-btn:hover {
-  color: #1e293b;
-}
-
-/* Content Area */
-.cm-content-area {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 /* Table Styles */
 .cm-table {
   width: 100%;
@@ -68,107 +59,90 @@
   font-weight: 700;
 }
 
-.status-badge {
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
+/* ✅ Premium Action Buttons */
+.action-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
-.status-badge.active { background: #dcfce7; color: #166534; }
-.status-badge.closed { background: #fee2e2; color: #991b1b; }
-.status-badge.hidden { background: #e2e8f0; color: #64748b; }
 
-.cm-action-btn {
-  margin-right: 8px;
-  padding: 6px 12px;
-  border-radius: 6px;
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-.cm-action-btn.edit { background: #eff6ff; color: #2563eb; }
-.cm-action-btn.del { background: #fff1f2; color: #e11d48; }
+
+.edit-btn { background: white; color: #3b82f6; border: 1px solid #e0e7ff; }
+.edit-btn:hover { background: #3b82f6; color: white; transform: translateY(-2px); }
+
+.del-btn { background: white; color: #ef4444; border: 1px solid #fee2e2; }
+.del-btn:hover { background: #ef4444; color: white; transform: translateY(-2px); }
+
+/* Status Badges */
+.status-badge { padding: 5px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+.status-badge.active { background: #dcfce7; color: #166534; }
+.status-badge.closed { background: #fee2e2; color: #991b1b; }
 
 /* Add Form Styles */
 .cm-form-card {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-  max-width: 600px;
+  background: white; padding: 30px; border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); max-width: 600px;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #334155;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-.hint-text {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  color: #64748b;
-}
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; }
+.form-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
 
 .cm-submit-btn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
-  transition: 0.2s;
+  background: #2563eb; color: white; border: none; padding: 14px 24px;
+  border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;
 }
 .cm-submit-btn:hover { background: #1d4ed8; }
 
-/* Modal Styles */
-.cm-modal-overlay {
+/* ✅ Premium Modal & Dialog Styles */
+.cm-modal-overlay, .cm-dialog-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex; justify-content: center; align-items: center;
-  z-index: 1000;
+  background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
+  display: flex; justify-content: center; align-items: center; z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
 }
 
+/* Edit Modal */
 .cm-modal {
-  background: white; padding: 30px;
-  border-radius: 12px; width: 400px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  background: white; padding: 30px; border-radius: 20px; width: 450px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cm-modal h3 { text-align: center; margin-bottom: 20px; color: #0f172a; }
+.cm-modal input:focus, .cm-modal select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); outline: none; }
+
+.cm-modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.save-btn { flex: 1; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.cancel-btn { flex: 1; padding: 12px; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+/* Alert Dialog Box */
+.cm-dialog-box {
+  background: white; padding: 30px; border-radius: 20px; width: 350px; text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cm-modal input, .cm-modal select {
-  width: 100%; padding: 10px; margin-bottom: 15px;
-  border: 1px solid #ccc; border-radius: 6px;
-}
+.cm-dialog-icon { font-size: 40px; margin-bottom: 15px; }
+.cm-dialog-box h3 { margin: 0 0 10px; color: #1e293b; }
+.cm-dialog-box p { color: #64748b; margin-bottom: 25px; line-height: 1.5; }
 
-.cm-modal-actions {
-  display: flex; gap: 10px; margin-top: 10px;
-}
-.save-btn, .cancel-btn {
-  flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;
-}
-.save-btn { background: #2563eb; color: white; }
-.cancel-btn { background: #f1f5f9; color: #64748b; }
+.cm-dialog-actions { display: flex; gap: 10px; justify-content: center; }
+.cm-dialog-btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; min-width: 80px; }
+.cm-dialog-btn.confirm { background: #2563eb; color: white; }
+.cm-dialog-btn.cancel { background: #f1f5f9; color: #64748b; }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
