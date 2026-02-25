@@ -1,0 +1,233 @@
+/* Container Styling */
+.bm-container {
+  padding: 25px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 1000px;
+  margin: 20px auto;
+  border: 1px solid #e2e8f0;
+}
+
+.bm-container h2 {
+  color: #1e293b;
+  font-size: 22px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 15px;
+}
+
+/* Table Styling */
+.bm-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.bm-table th,
+.bm-table td {
+  padding: 14px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14.5px;
+}
+
+.bm-table th {
+  background-color: #f8fafc;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.bm-table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.status-badge.active {
+  background-color: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.status-badge.closed {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Action Buttons in Table */
+.bm-icon-btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.bm-icon-btn.edit {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.bm-icon-btn.edit:hover {
+  background-color: #2563eb;
+  color: white;
+}
+
+.bm-icon-btn.del {
+  background-color: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+}
+
+.bm-icon-btn.del:hover {
+  background-color: #e11d48;
+  color: white;
+}
+
+/* ===========================
+   MODAL POPUP STYLES (Edit Form)
+   =========================== */
+.bm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6); /* Dark overlay */
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: bmFadeIn 0.2s ease-out;
+}
+
+.bm-modal {
+  background: white;
+  width: 90%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: bmSlideUp 0.3s ease-out;
+}
+
+.bm-modal h3 {
+  margin-top: 0;
+  color: #0f172a;
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Form Styles */
+.bm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.bm-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: -10px;
+}
+
+.bm-form input,
+.bm-form select {
+  padding: 12px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.bm-form input:focus,
+.bm-form select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Modal Buttons */
+.bm-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.bm-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.bm-btn.save {
+  background-color: #2563eb;
+  color: white;
+}
+
+.bm-btn.save:hover {
+  background-color: #1d4ed8;
+}
+
+.bm-btn.cancel {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.bm-btn.cancel:hover {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+/* Animations */
+@keyframes bmFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bmSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .bm-container {
+    padding: 15px;
+  }
+  
+  .bm-table th, .bm-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .bm-icon-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
