@@ -17,14 +17,13 @@
   gap: 10px;
 }
 
-/* Utilities */
 .em-fw-bold { font-weight: 700; color: #1e293b; }
 .em-fw-medium { font-weight: 600; color: #334155; }
 .em-text-blue { color: #2563eb; }
 .em-text-gray { color: #64748b; }
 .em-text-small { font-size: 12px; }
 
-/* Add Result Card (Form) */
+/* Form Card */
 .em-card {
   background: white;
   border-radius: 12px;
@@ -40,40 +39,20 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.em-card-header h3 {
-  margin: 0 0 5px 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #2563eb;
-}
+.em-card-header h3 { margin: 0 0 5px 0; font-size: 18px; font-weight: 700; color: #2563eb; }
+.em-card-header p { margin: 0; font-size: 13px; color: #64748b; }
 
-.em-card-header p {
-  margin: 0;
-  font-size: 13px;
-  color: #64748b;
-}
+.em-card-body { padding: 20px; }
 
-.em-card-body {
-  padding: 20px;
-}
-
+/* ✅ Form Grid (Modified minmax to wrap earlier) */
 .em-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* ၂၀၀ အစား ၂၈၀ ပြောင်းထားသည် */
   gap: 20px;
 }
 
-.em-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.em-form-group label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #475569;
-}
+.em-form-group { display: flex; flex-direction: column; gap: 6px; }
+.em-form-group label { font-size: 13px; font-weight: 700; color: #475569; }
 
 .em-input {
   width: 100%;
@@ -89,12 +68,7 @@
   box-sizing: border-box;
 }
 
-select.em-input {
-  background-color: #ffffff;
-  color: #1e293b;
-  cursor: pointer;
-}
-
+select.em-input { cursor: pointer; }
 .em-input::placeholder { color: #94a3b8; }
 .em-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 .em-input:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
@@ -115,7 +89,6 @@ select.em-input {
   transition: 0.2s;
   display: inline-block;
 }
-
 .em-btn-save:hover:not(:disabled) { background: #1d4ed8; }
 .em-btn-save:disabled { background: #cbd5e1; cursor: not-allowed; color: #64748b; }
 
@@ -129,31 +102,13 @@ select.em-input {
   -webkit-overflow-scrolling: touch;
 }
 
-.em-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 800px; 
-}
-
+.em-table { width: 100%; border-collapse: collapse; min-width: 800px; }
 .em-table thead { background: #f8fafc; }
-
-.em-table th {
-  padding: 15px;
-  text-align: left;
-  font-size: 14px;
-  font-weight: 700;
-  color: #475569;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.em-table td {
-  padding: 15px;
-  border-bottom: 1px solid #f1f5f9;
-  vertical-align: middle;
-}
-
+.em-table th { padding: 15px; text-align: left; font-size: 14px; font-weight: 700; color: #475569; border-bottom: 1px solid #e2e8f0; }
+.em-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .em-table tr:hover { background: #f8fafc; }
 
+/* ✅ FIXED: Empty State Styling */
 .em-empty, .em-loading {
   text-align: center;
   padding: 40px !important;
@@ -161,82 +116,52 @@ select.em-input {
   font-style: italic;
 }
 
-.em-grade-badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 12px;
-  display: inline-block;
-}
-
+.em-grade-badge { padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 12px; display: inline-block; }
 .grade-pass { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 .grade-fail { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-.em-btn-delete {
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
+.em-btn-delete { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
 .em-btn-delete:hover { background: #fecaca; }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE (FIXED)
+   📱 MOBILE RESPONSIVE (Strict Fixes)
    ========================================= */
 @media screen and (max-width: 768px) {
+  .em-form-grid { grid-template-columns: 1fr; gap: 15px; }
+  .em-card { margin-bottom: 20px; }
   
-  /* ✅ ပြဿနာအရင်းအမြစ် - Form အကွက်များကို အပေါ်အောက် ၁ ကွက်တည်းဖြစ်အောင် လုပ်လိုက်ပါပြီ */
-  .em-form-grid {
-    grid-template-columns: 1fr; 
-    gap: 15px;
-  }
-
-  .em-card {
-    margin-bottom: 20px;
-  }
-
-  .em-card-header, .em-card-body {
-    padding: 15px;
-  }
-
-  .em-title {
-    font-size: 18px;
-    margin-bottom: 15px;
-  }
-
+  /* ✅ REMOVE Outer Table Border & Bg to prevent double cards */
   .em-table-wrapper {
     overflow-x: hidden; 
+    border: none;
+    box-shadow: none;
+    background: transparent;
   }
 
-  .em-table {
-    min-width: 100%; 
-  }
+  .em-table { min-width: 100%; }
+  .em-table thead { display: none; }
+  .em-table, .em-table tbody, .em-table tr, .em-table td { display: block; width: 100%; box-sizing: border-box; }
 
-  .em-table thead {
-    display: none;
-  }
-
-  .em-table, .em-table tbody, .em-table tr, .em-table td {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
+  /* Render each row as a clean card */
   .em-table tr {
     margin-bottom: 15px;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
+    background: white;
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
 
-  .em-table td {
+  /* Empty State Fix for Mobile */
+  .em-table td.em-empty {
+    border: none;
+    text-align: center;
+    padding: 30px 10px !important;
+  }
+  .em-table td.em-empty::before { display: none !important; }
+
+  /* Standard TD */
+  .em-table td:not(.em-empty) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -246,7 +171,7 @@ select.em-input {
     gap: 10px; 
   }
 
-  .em-table td::before {
+  .em-table td:not(.em-empty)::before {
     content: attr(data-label);
     font-weight: 700;
     color: #64748b;
@@ -257,9 +182,7 @@ select.em-input {
     flex-shrink: 0;
   }
 
-  .em-table td > div, 
-  .em-table td > span,
-  .em-table td > button {
+  .em-table td > div, .em-table td > span, .em-table td > button {
     word-break: break-word;
     text-align: right;
     flex: 1;
@@ -268,12 +191,6 @@ select.em-input {
     align-items: flex-end; 
   }
 
-  .em-table td:last-child {
-    border-bottom: none;
-  }
-  
-  .em-btn-save {
-      width: 100%;
-      margin-top: 15px;
-  }
+  .em-table td:last-child { border-bottom: none; }
+  .em-btn-save { width: 100%; margin-top: 15px; }
 }
