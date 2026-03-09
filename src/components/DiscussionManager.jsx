@@ -169,8 +169,9 @@ function DiscussionManager() {
           {selectedThread ? (
             <>
               <div className="dm-chat-header">
-                 <button className="dm-back-btn" onClick={() => setSelectedThread(null)}>
-                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18">
+                 {/* ✅ FIX: Back Button with explicit #0f172a (Dark) arrow color */}
+                 <button className="dm-back-btn" onClick={() => setSelectedThread(null)} title="Back">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#0f172a" width="20" height="20">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                      </svg>
                  </button>

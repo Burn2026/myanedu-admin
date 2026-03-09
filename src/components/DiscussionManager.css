@@ -27,7 +27,7 @@
 
 /* Sidebar */
 .dm-sidebar {
-  width: 360px; /* နေရာပိုကျယ်အောင် နည်းနည်းတိုးထားသည် */
+  width: 360px; 
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
@@ -125,7 +125,7 @@
 
 .dm-item-course {
   font-size: 11px;
-  color: #2563eb; /* အတန်းနာမည်ကို ထင်ရှားစေရန် အပြာရောင်ပြောင်းထားသည် */
+  color: #2563eb; 
   font-weight: 700;
   margin-bottom: 4px;
   display: flex;
@@ -209,20 +209,26 @@
   gap: 12px;
 }
 
+/* ✅ FIX: Back Button Design (More visible) */
 .dm-back-btn {
   display: none; 
-  background: #f1f5f9;
-  color: #1e293b;
-  border: none;
-  width: 36px;
-  height: 36px;
+  background: #e2e8f0; /* အရောင်ကို ပိုထင်ရှားအောင် တင်လိုက်ပါသည် */
+  color: #0f172a; 
+  border: 1px solid #cbd5e1; /* ဘောင်အပါးလေး ထည့်ထားပါသည် */
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
-.dm-back-btn:hover { background: #e2e8f0; }
+
+.dm-back-btn:hover { 
+  background: #cbd5e1; 
+  transform: scale(1.05); /* Hover လုပ်လျှင် အနည်းငယ် ကြီးလာစေရန် */
+}
 
 .dm-chat-info { display: flex; flex-direction: column; }
 .dm-chat-student-name { font-size: 16px; font-weight: 800; color: #0f172a; }
