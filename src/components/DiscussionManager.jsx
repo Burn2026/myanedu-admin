@@ -139,7 +139,6 @@ function DiscussionManager() {
                                 {hasNewMessage && <span className="dm-badge-new">{unreadCount} New</span>}
                             </div>
 
-                            {/* ✅ ရှင်းလင်းသော သင်တန်းနှင့် ဗီဒီယို ပြသမှု */}
                             <div className="dm-item-course">
                                 <span style={{color: '#94a3b8', fontWeight: 'normal', marginRight: '4px'}}>📚 သင်တန်း:</span> 
                                 {d.course_name || "Course"} ({d.batch_name})
@@ -169,10 +168,15 @@ function DiscussionManager() {
           {selectedThread ? (
             <>
               <div className="dm-chat-header">
-                 {/* ✅ FIX: Back Button with explicit #0f172a (Dark) arrow color */}
-                 <button className="dm-back-btn" onClick={() => setSelectedThread(null)} title="Back">
-                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#0f172a" width="20" height="20">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                 {/* ✅ FIX: Solid Filled Arrow (အမည်းရောင်အပြည့် မြှားအစစ်) ဖြင့် အစားထိုးထားသည် */}
+                 <button 
+                    className="dm-back-btn" 
+                    onClick={() => setSelectedThread(null)} 
+                    title="Back"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                 >
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0f172a" width="22" height="22">
+                        <path fillRule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
                      </svg>
                  </button>
 
@@ -184,7 +188,6 @@ function DiscussionManager() {
                          <div className="dm-chat-student-name">
                             {selectedThread.student_name}
                          </div>
-                         {/* ✅ Chat Header တွင်လည်း ရှင်းလင်းစွာ ပြသခြင်း */}
                          <div className="dm-chat-course" style={{marginTop: '2px'}}>
                             <span style={{color: '#94a3b8'}}>📚 သင်တန်း -</span> {selectedThread.course_name} ({selectedThread.batch_name})
                          </div>
