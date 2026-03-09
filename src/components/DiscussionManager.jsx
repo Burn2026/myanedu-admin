@@ -168,15 +168,15 @@ function DiscussionManager() {
           {selectedThread ? (
             <>
               <div className="dm-chat-header">
-                 {/* ✅ FIX: Solid Filled Arrow (အမည်းရောင်အပြည့် မြှားအစစ်) ဖြင့် အစားထိုးထားသည် */}
+                 {/* ✅ FIX: Absolutely explicit stroke and fill styling for the SVG */}
                  <button 
                     className="dm-back-btn" 
                     onClick={() => setSelectedThread(null)} 
                     title="Back"
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                  >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0f172a" width="22" height="22">
-                        <path fillRule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{display: 'block', width: '20px', height: '20px'}}>
+                         <line x1="19" y1="12" x2="5" y2="12"></line>
+                         <polyline points="12 19 5 12 12 5"></polyline>
                      </svg>
                  </button>
 
@@ -229,8 +229,9 @@ function DiscussionManager() {
                   className="dm-input"
                 />
                 <button type="submit" disabled={loading || !reply.trim()} className="dm-btn-send">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{display: 'block', width: '20px', height: '20px'}}>
+                     <line x1="22" y1="2" x2="11" y2="13"></line>
+                     <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                   </svg>
                 </button>
               </form>

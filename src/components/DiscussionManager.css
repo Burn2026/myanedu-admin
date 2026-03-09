@@ -64,7 +64,6 @@
   font-style: italic;
 }
 
-/* ✅ PREMIUM LIST ITEM STYLING */
 .dm-list-item {
   padding: 16px 20px;
   border-bottom: 1px solid #f1f5f9;
@@ -77,16 +76,9 @@
   gap: 15px;
 }
 
-.dm-list-item:hover {
-  background: #f8fafc;
-}
+.dm-list-item:hover { background: #f8fafc; }
+.dm-list-item.active { background: #eff6ff; border-left-color: #2563eb; }
 
-.dm-list-item.active {
-  background: #eff6ff;
-  border-left-color: #2563eb;
-}
-
-/* Avatar Styling */
 .dm-avatar-wrapper {
   width: 45px;
   height: 45px;
@@ -98,30 +90,11 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.dm-avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.dm-avatar-img { width: 100%; height: 100%; object-fit: cover; }
 
-/* List Content Styling */
-.dm-item-content {
-  flex: 1;
-  min-width: 0; 
-}
-
-.dm-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.dm-item-student {
-  font-weight: 800;
-  font-size: 14.5px;
-  color: #1e293b;
-}
+.dm-item-content { flex: 1; min-width: 0; }
+.dm-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.dm-item-student { font-weight: 800; font-size: 14.5px; color: #1e293b; }
 
 .dm-item-course {
   font-size: 11px;
@@ -148,7 +121,6 @@
   text-overflow: ellipsis;
 }
 
-/* Badge & Messages */
 .dm-badge-new {
   background: #ef4444;
   color: white;
@@ -179,7 +151,6 @@
   max-width: 100%;
 }
 
-/* --- Main Chat Area --- */
 .dm-chat-area {
   flex: 1;
   background: #f8fafc;
@@ -203,30 +174,26 @@
   z-index: 10;
 }
 
-.dm-chat-header-user {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.dm-chat-header-user { display: flex; align-items: center; gap: 12px; }
 
-/* ✅ FIX: Back Button Design (Desktop တွင်ပါ မြင်ရစေရန် display: flex ပြောင်းထားသည်) */
+/* ✅ FIX: !important ပါဝင်သော Back Button Style */
 .dm-back-btn {
-  display: flex; 
-  background: #e2e8f0; 
-  color: #0f172a; 
-  border: 1px solid #cbd5e1; 
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
+  display: flex !important; 
+  background: #e2e8f0 !important; 
+  border: 1px solid #cbd5e1 !important; 
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
 }
 
 .dm-back-btn:hover { 
-  background: #cbd5e1; 
+  background: #cbd5e1 !important; 
   transform: scale(1.05); 
 }
 
@@ -234,7 +201,6 @@
 .dm-chat-student-name { font-size: 16px; font-weight: 800; color: #0f172a; }
 .dm-chat-course { font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;}
 
-/* Messages Area */
 .dm-chat-messages {
   flex: 1;
   padding: 20px;
@@ -250,7 +216,6 @@
 
 .dm-empty-chat { text-align: center; color: #94a3b8; margin: auto; font-style: italic; font-size: 14px; }
 
-/* Chat Bubbles */
 .dm-message-row { display: flex; flex-direction: column; max-width: 80%; animation: popIn 0.3s ease-out; }
 .dm-message-row.is-admin { align-self: flex-end; align-items: flex-end; }
 .dm-message-row.is-student { align-self: flex-start; align-items: flex-start; }
@@ -263,12 +228,11 @@
 
 .dm-message-time { font-size: 10px; font-weight: 600; color: #94a3b8; margin-top: 4px; padding: 0 4px; }
 
-/* Form Area */
 .dm-reply-form { padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; align-items: center; }
 .dm-input { flex: 1; padding: 14px 18px; background-color: #f1f5f9; border: 1px solid transparent; border-radius: 24px; font-size: 14.5px; color: #1e293b; outline: none; font-family: inherit; transition: all 0.2s ease; box-sizing: border-box; }
 .dm-input:focus { background-color: #ffffff; border-color: #bfdbfe; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
 
-.dm-btn-send { background: #2563eb; color: white; border: none; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
+.dm-btn-send { background: #2563eb; color: white; border: none; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); padding: 0; }
 .dm-btn-send:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.4); }
 .dm-btn-send:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
 
@@ -285,7 +249,6 @@
   .dm-layout { height: calc(100vh - 120px); }
   .dm-sidebar, .dm-chat-area { width: 100%; height: 100%; border-radius: 12px; }
   .dm-hidden-mobile { display: none !important; }
-  .dm-back-btn { display: flex; }
   .dm-message-row { max-width: 90%; }
   .dm-reply-form { padding: 12px 15px; }
   .dm-input { padding: 12px 16px; }
