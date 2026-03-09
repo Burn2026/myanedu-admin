@@ -19,7 +19,6 @@ function DiscussionManager() {
       const res = await fetch('https://myanedu-backend.onrender.com/admin/discussions');
       if (res.ok) {
         const data = await res.json();
-        // 0 message မဟုတ်သော thread များကိုသာ ပြမည်
         const activeDiscussions = data.filter(d => Number(d.total_comments) > 0);
         setDiscussions(activeDiscussions);
       }
@@ -35,7 +34,6 @@ function DiscussionManager() {
   const loadChat = async (thread) => {
     setSelectedThread(thread);
     const targetId = thread.lesson_id || thread.id; 
-    
     const studentName = encodeURIComponent(thread.student_name);
 
     if (!targetId) return;
@@ -92,7 +90,6 @@ function DiscussionManager() {
     } catch (err) { alert("Network Error"); } finally { setLoading(false); }
   };
 
-  // ✅ FIX: Profile ပုံအစစ် ရှိလျှင် ပုံပြမည်၊ မရှိလျှင်သာ နာမည်စာလုံးပြမည်
   const getAvatarUrl = (path, name) => {
       if (!path || path === "null" || path === "undefined") {
           const safeName = encodeURIComponent(name || 'Student');
@@ -132,28 +129,29 @@ function DiscussionManager() {
                   return (
                     <div key={index} onClick={() => loadChat(d)} className={`dm-list-item ${isActive ? 'active' : ''}`}>
                         
-                        {/* ✅ Student Avatar Updated to use profile_image */}
                         <div className="dm-avatar-wrapper">
                             <img src={getAvatarUrl(d.profile_image, d.student_name)} alt="Avatar" className="dm-avatar-img" />
                         </div>
 
-                        {/* ✅ Discussion Details */}
                         <div className="dm-item-content">
                             <div className="dm-item-header">
                                 <span className="dm-item-student">{d.student_name}</span>
                                 {hasNewMessage && <span className="dm-badge-new">{unreadCount} New</span>}
                             </div>
 
+                            {/* ✅ ရှင်းလင်းသော သင်တန်းနှင့် ဗီဒီယို ပြသမှု */}
                             <div className="dm-item-course">
-                                📚 {d.batch_name || "Course"}
+                                <span style={{color: '#94a3b8', fontWeight: 'normal', marginRight: '4px'}}>📚 သင်တန်း:</span> 
+                                {d.course_name || "Course"} ({d.batch_name})
                             </div>
 
                             <div className="dm-item-title">
-                                📺 {d.lesson_title}
+                                <span style={{color: '#94a3b8', fontWeight: 'normal', marginRight: '4px'}}>🎬 ဗီဒီယို:</span> 
+                                {d.lesson_title}
                             </div>
 
                             {!hasNewMessage && (
-                                <div className="dm-last-message">
+                                <div className="dm-last-message" style={{marginTop: '5px'}}>
                                     {d.last_message || "📎 Message Attached"}
                                 </div>
                             )}
@@ -178,16 +176,19 @@ function DiscussionManager() {
                  </button>
 
                  <div className="dm-chat-header-user">
-                     {/* ✅ Chat Header Avatar Updated */}
-                     <div className="dm-avatar-wrapper" style={{ width: '40px', height: '40px' }}>
+                     <div className="dm-avatar-wrapper" style={{ width: '45px', height: '45px' }}>
                          <img src={getAvatarUrl(selectedThread.profile_image, selectedThread.student_name)} alt="Avatar" className="dm-avatar-img" />
                      </div>
                      <div className="dm-chat-info">
                          <div className="dm-chat-student-name">
                             {selectedThread.student_name}
                          </div>
-                         <div className="dm-chat-course">
-                            {selectedThread.lesson_title} • {selectedThread.batch_name}
+                         {/* ✅ Chat Header တွင်လည်း ရှင်းလင်းစွာ ပြသခြင်း */}
+                         <div className="dm-chat-course" style={{marginTop: '2px'}}>
+                            <span style={{color: '#94a3b8'}}>📚 သင်တန်း -</span> {selectedThread.course_name} ({selectedThread.batch_name})
+                         </div>
+                         <div className="dm-chat-course" style={{marginTop: '2px', color: '#2563eb'}}>
+                            <span style={{color: '#94a3b8'}}>🎬 ဗီဒီယို -</span> {selectedThread.lesson_title}
                          </div>
                      </div>
                  </div>
