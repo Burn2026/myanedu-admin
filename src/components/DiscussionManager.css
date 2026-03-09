@@ -209,12 +209,12 @@
   gap: 12px;
 }
 
-/* ✅ FIX: Back Button Design (More visible) */
+/* ✅ FIX: Back Button Design (Desktop တွင်ပါ မြင်ရစေရန် display: flex ပြောင်းထားသည်) */
 .dm-back-btn {
-  display: none; 
-  background: #e2e8f0; /* အရောင်ကို ပိုထင်ရှားအောင် တင်လိုက်ပါသည် */
+  display: flex; 
+  background: #e2e8f0; 
   color: #0f172a; 
-  border: 1px solid #cbd5e1; /* ဘောင်အပါးလေး ထည့်ထားပါသည် */
+  border: 1px solid #cbd5e1; 
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -227,7 +227,7 @@
 
 .dm-back-btn:hover { 
   background: #cbd5e1; 
-  transform: scale(1.05); /* Hover လုပ်လျှင် အနည်းငယ် ကြီးလာစေရန် */
+  transform: scale(1.05); 
 }
 
 .dm-chat-info { display: flex; flex-direction: column; }
