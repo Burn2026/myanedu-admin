@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './ExamManagement.css'; // ✅ CSS ဖိုင်အသစ် ချိတ်ဆက်ထားသည်
+import './ExamManagement.css'; 
 
 function ExamManagement() {
   const [exams, setExams] = useState([]);
@@ -31,15 +31,25 @@ function ExamManagement() {
     fetchExams();
   }, []);
 
+  // ✅ ဖုန်းနံပါတ်ရိုက်ပြီး အပြင်ကို Click လိုက်တာနဲ့ အတန်းတွေကို လှမ်းရှာမယ့် Function
   const handlePhoneBlur = async () => {
-      if (!newResult.phone) return;
+      const phoneNumber = newResult.phone.trim();
+      if (!phoneNumber) return;
+      
       setSearching(true);
+      setStudentBatches([]); // အသစ်ရှာရင် အဟောင်းတွေ ဖျက်မည်
+      setNewResult({ ...newResult, enrollment_id: '' }); 
+
       try {
-          const res = await fetch(`https://myanedu-backend.onrender.com/admin/student-batches?phone=${newResult.phone}`);
-          const data = await res.json();
-          setStudentBatches(data);
-          
-          if(data.length === 0) alert("No active courses found for this student!");
+          const res = await fetch(`https://myanedu-backend.onrender.com/admin/student-batches?phone=${phoneNumber}`);
+          if (res.ok) {
+              const data = await res.json();
+              setStudentBatches(data);
+              
+              if(data.length === 0) {
+                  alert("⚠️ ဤဖုန်းနံပါတ်ဖြင့် တက်ရောက်နေသော အတန်း မရှိပါ!");
+              }
+          }
       } catch (err) {
           console.error(err);
       } finally {
@@ -62,7 +72,7 @@ function ExamManagement() {
         });
 
         if (res.ok) {
-            alert("Result Added Successfully! 🎉");
+            alert("✅ Result Added Successfully!");
             setNewResult({ ...newResult, marks_obtained: '', exam_title: '', enrollment_id: '', grade: 'A' }); 
             fetchExams(); 
         } else {
@@ -100,7 +110,7 @@ function ExamManagement() {
                 
                 {/* Phone Input */}
                 <div className="em-form-group">
-                    <label>Student Phone (Enter to Search)</label>
+                    <label>Student Phone (Enter & click outside)</label>
                     <input 
                         type="text" 
                         placeholder="e.g. 09xxxxxxxxx" 
@@ -109,7 +119,8 @@ function ExamManagement() {
                         onChange={e => setNewResult({...newResult, phone: e.target.value})}
                         onBlur={handlePhoneBlur} 
                     />
-                    {searching && <span className="em-status-text">Searching courses...</span>}
+                    {searching && <span className="em-status-text" style={{color: '#d97706'}}>🔍 Searching courses...</span>}
+                    {!searching && studentBatches.length > 0 && <span className="em-status-text" style={{color: '#16a34a'}}>✅ Found {studentBatches.length} course(s)</span>}
                 </div>
 
                 {/* Select Course */}
