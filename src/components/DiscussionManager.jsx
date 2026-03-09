@@ -92,10 +92,17 @@ function DiscussionManager() {
     } catch (err) { alert("Network Error"); } finally { setLoading(false); }
   };
 
-  // ✅ Profile ပုံမရှိရင် နာမည်နဲ့ ပုံဖန်တီးပေးမယ့် Function
-  const getAvatarUrl = (name) => {
-      const safeName = encodeURIComponent(name || 'Student');
-      return `https://ui-avatars.com/api/?name=${safeName}&background=2563eb&color=fff&bold=true&font-size=0.4`;
+  // ✅ FIX: Profile ပုံအစစ် ရှိလျှင် ပုံပြမည်၊ မရှိလျှင်သာ နာမည်စာလုံးပြမည်
+  const getAvatarUrl = (path, name) => {
+      if (!path || path === "null" || path === "undefined") {
+          const safeName = encodeURIComponent(name || 'Student');
+          return `https://ui-avatars.com/api/?name=${safeName}&background=2563eb&color=fff&bold=true&font-size=0.4`;
+      }
+      let cleanPath = String(path).trim().replace(/\\/g, '/');
+      const httpIndex = cleanPath.indexOf("http");
+      if (httpIndex !== -1) return cleanPath.substring(httpIndex);
+      if (cleanPath.includes("cloudinary.com")) return `https://${cleanPath.replace(/^\/+/, '')}`;
+      return `https://myanedu-backend.onrender.com/${cleanPath.replace(/^\/+/, '')}`;
   };
 
   return (
@@ -125,9 +132,9 @@ function DiscussionManager() {
                   return (
                     <div key={index} onClick={() => loadChat(d)} className={`dm-list-item ${isActive ? 'active' : ''}`}>
                         
-                        {/* ✅ Student Avatar */}
+                        {/* ✅ Student Avatar Updated to use profile_image */}
                         <div className="dm-avatar-wrapper">
-                            <img src={getAvatarUrl(d.student_name)} alt="Avatar" className="dm-avatar-img" />
+                            <img src={getAvatarUrl(d.profile_image, d.student_name)} alt="Avatar" className="dm-avatar-img" />
                         </div>
 
                         {/* ✅ Discussion Details */}
@@ -163,7 +170,6 @@ function DiscussionManager() {
         <div className={`dm-chat-area ${!selectedThread ? 'dm-hidden-mobile' : ''}`}>
           {selectedThread ? (
             <>
-              {/* ✅ Chat Header Updated */}
               <div className="dm-chat-header">
                  <button className="dm-back-btn" onClick={() => setSelectedThread(null)}>
                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18">
@@ -172,8 +178,9 @@ function DiscussionManager() {
                  </button>
 
                  <div className="dm-chat-header-user">
+                     {/* ✅ Chat Header Avatar Updated */}
                      <div className="dm-avatar-wrapper" style={{ width: '40px', height: '40px' }}>
-                         <img src={getAvatarUrl(selectedThread.student_name)} alt="Avatar" className="dm-avatar-img" />
+                         <img src={getAvatarUrl(selectedThread.profile_image, selectedThread.student_name)} alt="Avatar" className="dm-avatar-img" />
                      </div>
                      <div className="dm-chat-info">
                          <div className="dm-chat-student-name">
