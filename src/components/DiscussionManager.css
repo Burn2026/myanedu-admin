@@ -27,7 +27,7 @@
 
 /* Sidebar */
 .dm-sidebar {
-  width: 340px;
+  width: 360px; /* နေရာပိုကျယ်အောင် နည်းနည်းတိုးထားသည် */
   background: white;
   border-radius: 16px;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
@@ -52,7 +52,6 @@
   flex: 1;
 }
 
-/* Custom Scrollbar for Sidebar */
 .dm-sidebar-list::-webkit-scrollbar { width: 6px; }
 .dm-sidebar-list::-webkit-scrollbar-track { background: transparent; }
 .dm-sidebar-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -65,13 +64,17 @@
   font-style: italic;
 }
 
+/* ✅ PREMIUM LIST ITEM STYLING */
 .dm-list-item {
-  padding: 18px 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
   background: white;
   border-left: 4px solid transparent;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
 }
 
 .dm-list-item:hover {
@@ -83,35 +86,76 @@
   border-left-color: #2563eb;
 }
 
+/* Avatar Styling */
+.dm-avatar-wrapper {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #e2e8f0;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dm-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* List Content Styling */
+.dm-item-content {
+  flex: 1;
+  min-width: 0; 
+}
+
+.dm-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.dm-item-student {
+  font-weight: 800;
+  font-size: 14.5px;
+  color: #1e293b;
+}
+
 .dm-item-course {
   font-size: 11px;
-  color: #64748b;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  color: #2563eb; /* အတန်းနာမည်ကို ထင်ရှားစေရန် အပြာရောင်ပြောင်းထားသည် */
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dm-item-title {
-  font-weight: 700;
-  font-size: 14px;
-  color: #1e293b;
+  font-size: 12.5px;
+  color: #475569;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ✅ NEW MESSAGE & LAST MESSAGE STYLES */
-.dm-item-status {
-  margin-top: 5px;
-}
-
+/* Badge & Messages */
 .dm-badge-new {
   background: #ef4444;
   color: white;
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 12px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  display: inline-block;
   box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
   animation: pulse-red 2s infinite;
 }
@@ -123,20 +167,19 @@
 }
 
 .dm-last-message {
-  font-size: 12.5px;
+  font-size: 12px;
   color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 250px;
-  font-weight: 500;
   background: #f1f5f9;
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
   display: inline-block;
+  max-width: 100%;
 }
 
-/* Main Chat Area */
+/* --- Main Chat Area --- */
 .dm-chat-area {
   flex: 1;
   background: #f8fafc;
@@ -160,6 +203,12 @@
   z-index: 10;
 }
 
+.dm-chat-header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .dm-back-btn {
   display: none; 
   background: #f1f5f9;
@@ -173,25 +222,11 @@
   cursor: pointer;
   transition: 0.2s;
 }
-
 .dm-back-btn:hover { background: #e2e8f0; }
 
-.dm-chat-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.dm-chat-course {
-  font-size: 12px;
-  color: #64748b;
-  font-weight: 700;
-}
-
-.dm-chat-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: #0f172a;
-}
+.dm-chat-info { display: flex; flex-direction: column; }
+.dm-chat-student-name { font-size: 16px; font-weight: 800; color: #0f172a; }
+.dm-chat-course { font-size: 12px; color: #64748b; font-weight: 600; margin-top: 2px;}
 
 /* Messages Area */
 .dm-chat-messages {
@@ -203,193 +238,50 @@
   gap: 15px;
   background: #f8fafc;
 }
-
 .dm-chat-messages::-webkit-scrollbar { width: 6px; }
 .dm-chat-messages::-webkit-scrollbar-track { background: transparent; }
 .dm-chat-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-.dm-empty-chat {
-  text-align: center;
-  color: #94a3b8;
-  margin: auto;
-  font-style: italic;
-  font-size: 14px;
-}
+.dm-empty-chat { text-align: center; color: #94a3b8; margin: auto; font-style: italic; font-size: 14px; }
 
-/* Chat Bubbles (Premium Style) */
-.dm-message-row {
-  display: flex;
-  flex-direction: column;
-  max-width: 80%;
-  animation: popIn 0.3s ease-out;
-}
+/* Chat Bubbles */
+.dm-message-row { display: flex; flex-direction: column; max-width: 80%; animation: popIn 0.3s ease-out; }
+.dm-message-row.is-admin { align-self: flex-end; align-items: flex-end; }
+.dm-message-row.is-student { align-self: flex-start; align-items: flex-start; }
 
-.dm-message-row.is-admin {
-  align-self: flex-end;
-  align-items: flex-end;
-}
+.dm-message-sender { font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 4px; padding: 0 4px; }
+.dm-message-bubble { padding: 12px 18px; font-size: 14.5px; line-height: 1.5; word-break: break-word; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-.dm-message-row.is-student {
-  align-self: flex-start;
-  align-items: flex-start;
-}
+.is-admin .dm-message-bubble { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border-radius: 18px 18px 4px 18px; }
+.is-student .dm-message-bubble { background: white; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 18px 18px 18px 4px; }
 
-.dm-message-sender {
-  font-size: 11px;
-  font-weight: 700;
-  color: #64748b;
-  margin-bottom: 4px;
-  padding: 0 4px;
-}
-
-.dm-message-bubble {
-  padding: 12px 18px;
-  font-size: 14.5px;
-  line-height: 1.5;
-  word-break: break-word;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.is-admin .dm-message-bubble {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  border-radius: 18px 18px 4px 18px; 
-}
-
-.is-student .dm-message-bubble {
-  background: white;
-  color: #1e293b;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px 18px 18px 4px;
-}
-
-.dm-message-time {
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-top: 4px;
-  padding: 0 4px;
-}
+.dm-message-time { font-size: 10px; font-weight: 600; color: #94a3b8; margin-top: 4px; padding: 0 4px; }
 
 /* Form Area */
-.dm-reply-form {
-  padding: 15px 20px;
-  background: white;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+.dm-reply-form { padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; align-items: center; }
+.dm-input { flex: 1; padding: 14px 18px; background-color: #f1f5f9; border: 1px solid transparent; border-radius: 24px; font-size: 14.5px; color: #1e293b; outline: none; font-family: inherit; transition: all 0.2s ease; box-sizing: border-box; }
+.dm-input:focus { background-color: #ffffff; border-color: #bfdbfe; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
 
-.dm-input {
-  flex: 1;
-  padding: 14px 18px;
-  background-color: #f1f5f9; 
-  border: 1px solid transparent;
-  border-radius: 24px; 
-  font-size: 14.5px;
-  color: #1e293b;
-  outline: none;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-}
+.dm-btn-send { background: #2563eb; color: white; border: none; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3); }
+.dm-btn-send:hover:not(:disabled) { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.4); }
+.dm-btn-send:disabled { background: #cbd5e1; box-shadow: none; cursor: not-allowed; }
 
-.dm-input:focus {
-  background-color: #ffffff;
-  border-color: #bfdbfe;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
+.dm-no-selection { flex: 1; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-direction: column; background: #f8fafc; }
+.dm-no-icon { margin-bottom: 15px; animation: float 3s ease-in-out infinite; }
 
-.dm-btn-send {
-  background: #2563eb;
-  color: white;
-  border: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-}
-
-.dm-btn-send:hover:not(:disabled) {
-  background: #1d4ed8;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.4);
-}
-
-.dm-btn-send:disabled {
-  background: #cbd5e1;
-  box-shadow: none;
-  cursor: not-allowed;
-}
-
-.dm-no-selection {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  flex-direction: column;
-  background: #f8fafc;
-}
-
-.dm-no-icon {
-  margin-bottom: 15px;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes popIn {
-  from { opacity: 0; transform: translateY(10px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
+@keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
 /* =========================================
    📱 MOBILE RESPONSIVE 
    ========================================= */
 @media screen and (max-width: 768px) {
-  .dm-layout {
-    height: calc(100vh - 120px); 
-  }
-
-  .dm-sidebar, .dm-chat-area {
-    width: 100%; 
-    height: 100%;
-    border-radius: 12px;
-  }
-
-  .dm-hidden-mobile {
-    display: none !important;
-  }
-
-  .dm-back-btn {
-    display: flex; 
-  }
-
-  .dm-message-row {
-    max-width: 90%; 
-  }
-
-  .dm-reply-form {
-    padding: 12px 15px;
-  }
-
-  .dm-input {
-    padding: 12px 16px;
-  }
-
-  .dm-btn-send {
-    width: 44px;
-    height: 44px;
-  }
+  .dm-layout { height: calc(100vh - 120px); }
+  .dm-sidebar, .dm-chat-area { width: 100%; height: 100%; border-radius: 12px; }
+  .dm-hidden-mobile { display: none !important; }
+  .dm-back-btn { display: flex; }
+  .dm-message-row { max-width: 90%; }
+  .dm-reply-form { padding: 12px 15px; }
+  .dm-input { padding: 12px 16px; }
+  .dm-btn-send { width: 44px; height: 44px; }
 }

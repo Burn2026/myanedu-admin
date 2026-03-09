@@ -36,7 +36,6 @@ function DiscussionManager() {
     setSelectedThread(thread);
     const targetId = thread.lesson_id || thread.id; 
     
-    // ✅ FIX: ကျောင်းသားနာမည်ပါ ထည့်သွင်းပြီး Filter လုပ်ခိုင်းမည်
     const studentName = encodeURIComponent(thread.student_name);
 
     if (!targetId) return;
@@ -50,7 +49,6 @@ function DiscussionManager() {
         setChatHistory(messages);
         scrollToBottom();
 
-        // Unique ID (LessonID + StudentName) ဖြင့် ဖတ်ပြီးသားမှတ်သားမည်
         const uniqueKey = `${targetId}_${thread.student_name}`;
         const updatedReads = { ...readChats, [uniqueKey]: Number(thread.total_comments) };
         setReadChats(updatedReads);
@@ -94,6 +92,12 @@ function DiscussionManager() {
     } catch (err) { alert("Network Error"); } finally { setLoading(false); }
   };
 
+  // ✅ Profile ပုံမရှိရင် နာမည်နဲ့ ပုံဖန်တီးပေးမယ့် Function
+  const getAvatarUrl = (name) => {
+      const safeName = encodeURIComponent(name || 'Student');
+      return `https://ui-avatars.com/api/?name=${safeName}&background=2563eb&color=fff&bold=true&font-size=0.4`;
+  };
+
   return (
     <div className="dm-container">
       <h2 className="dm-title"><span>💬</span> Q&A Discussion</h2>
@@ -120,26 +124,34 @@ function DiscussionManager() {
                   
                   return (
                     <div key={index} onClick={() => loadChat(d)} className={`dm-list-item ${isActive ? 'active' : ''}`}>
-                        {/* ✅ Student Name ကို ထင်ရှားစွာ ပြသခြင်း */}
-                        <div className="dm-item-student" style={{fontWeight: '800', fontSize: '14px', color: '#1e293b', marginBottom:'4px'}}>
-                           👤 {d.student_name}
+                        
+                        {/* ✅ Student Avatar */}
+                        <div className="dm-avatar-wrapper">
+                            <img src={getAvatarUrl(d.student_name)} alt="Avatar" className="dm-avatar-img" />
                         </div>
 
-                        <div className="dm-item-course">
-                            {d.course_name} • {d.batch_name}
-                        </div>
-                        <div className="dm-item-title">
-                            📺 {d.lesson_title}
-                        </div>
-                        <div className="dm-item-status">
-                            {hasNewMessage ? (
-                                <span className="dm-badge-new">🔴 {unreadCount} New</span>
-                            ) : (
+                        {/* ✅ Discussion Details */}
+                        <div className="dm-item-content">
+                            <div className="dm-item-header">
+                                <span className="dm-item-student">{d.student_name}</span>
+                                {hasNewMessage && <span className="dm-badge-new">{unreadCount} New</span>}
+                            </div>
+
+                            <div className="dm-item-course">
+                                📚 {d.batch_name || "Course"}
+                            </div>
+
+                            <div className="dm-item-title">
+                                📺 {d.lesson_title}
+                            </div>
+
+                            {!hasNewMessage && (
                                 <div className="dm-last-message">
-                                    {d.last_message || "📎 Message"}
+                                    {d.last_message || "📎 Message Attached"}
                                 </div>
                             )}
                         </div>
+
                     </div>
                   );
                 })
@@ -151,19 +163,25 @@ function DiscussionManager() {
         <div className={`dm-chat-area ${!selectedThread ? 'dm-hidden-mobile' : ''}`}>
           {selectedThread ? (
             <>
+              {/* ✅ Chat Header Updated */}
               <div className="dm-chat-header">
                  <button className="dm-back-btn" onClick={() => setSelectedThread(null)}>
                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                      </svg>
                  </button>
-                 <div className="dm-chat-info">
-                     {/* Header မှာ ကျောင်းသားနာမည်ကိုပါ ပြပေးခြင်း */}
-                     <div className="dm-chat-student-name" style={{fontSize: '16px', fontWeight: 'bold', color: '#0f172a'}}>
-                        💬 Chat with {selectedThread.student_name}
+
+                 <div className="dm-chat-header-user">
+                     <div className="dm-avatar-wrapper" style={{ width: '40px', height: '40px' }}>
+                         <img src={getAvatarUrl(selectedThread.student_name)} alt="Avatar" className="dm-avatar-img" />
                      </div>
-                     <div className="dm-chat-course" style={{fontSize:'12px', color:'#64748b'}}>
-                        {selectedThread.lesson_title} ({selectedThread.batch_name})
+                     <div className="dm-chat-info">
+                         <div className="dm-chat-student-name">
+                            {selectedThread.student_name}
+                         </div>
+                         <div className="dm-chat-course">
+                            {selectedThread.lesson_title} • {selectedThread.batch_name}
+                         </div>
                      </div>
                  </div>
               </div>
