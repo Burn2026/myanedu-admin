@@ -17,13 +17,14 @@
   gap: 10px;
 }
 
+/* Utilities */
 .em-fw-bold { font-weight: 700; color: #1e293b; }
 .em-fw-medium { font-weight: 600; color: #334155; }
 .em-text-blue { color: #2563eb; }
 .em-text-gray { color: #64748b; }
 .em-text-small { font-size: 12px; }
 
-/* Form Card */
+/* Add Result Card (Form) */
 .em-card {
   background: white;
   border-radius: 12px;
@@ -39,20 +40,40 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
-.em-card-header h3 { margin: 0 0 5px 0; font-size: 18px; font-weight: 700; color: #2563eb; }
-.em-card-header p { margin: 0; font-size: 13px; color: #64748b; }
+.em-card-header h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2563eb;
+}
 
-.em-card-body { padding: 20px; }
+.em-card-header p {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
 
-/* ✅ Form Grid (Modified minmax to wrap earlier) */
+.em-card-body {
+  padding: 20px;
+}
+
 .em-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* ၂၀၀ အစား ၂၈၀ ပြောင်းထားသည် */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
 
-.em-form-group { display: flex; flex-direction: column; gap: 6px; }
-.em-form-group label { font-size: 13px; font-weight: 700; color: #475569; }
+.em-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.em-form-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+}
 
 .em-input {
   width: 100%;
@@ -108,7 +129,6 @@ select.em-input { cursor: pointer; }
 .em-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .em-table tr:hover { background: #f8fafc; }
 
-/* ✅ FIXED: Empty State Styling */
 .em-empty, .em-loading {
   text-align: center;
   padding: 40px !important;
@@ -124,13 +144,12 @@ select.em-input { cursor: pointer; }
 .em-btn-delete:hover { background: #fecaca; }
 
 /* =========================================
-   📱 MOBILE RESPONSIVE (Strict Fixes)
+   📱 MOBILE RESPONSIVE (Fixed Button Stretch)
    ========================================= */
 @media screen and (max-width: 768px) {
   .em-form-grid { grid-template-columns: 1fr; gap: 15px; }
   .em-card { margin-bottom: 20px; }
   
-  /* ✅ REMOVE Outer Table Border & Bg to prevent double cards */
   .em-table-wrapper {
     overflow-x: hidden; 
     border: none;
@@ -142,7 +161,6 @@ select.em-input { cursor: pointer; }
   .em-table thead { display: none; }
   .em-table, .em-table tbody, .em-table tr, .em-table td { display: block; width: 100%; box-sizing: border-box; }
 
-  /* Render each row as a clean card */
   .em-table tr {
     margin-bottom: 15px;
     border: 1px solid #e2e8f0;
@@ -152,7 +170,6 @@ select.em-input { cursor: pointer; }
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
 
-  /* Empty State Fix for Mobile */
   .em-table td.em-empty {
     border: none;
     text-align: center;
@@ -160,7 +177,6 @@ select.em-input { cursor: pointer; }
   }
   .em-table td.em-empty::before { display: none !important; }
 
-  /* Standard TD */
   .em-table td:not(.em-empty) {
     display: flex;
     justify-content: space-between;
@@ -182,13 +198,22 @@ select.em-input { cursor: pointer; }
     flex-shrink: 0;
   }
 
-  .em-table td > div, .em-table td > span, .em-table td > button {
+  .em-table td > div, 
+  .em-table td > span {
     word-break: break-word;
     text-align: right;
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-end; 
+  }
+
+  /* ✅ FIX: Button နှင့် Badge များ ဘေးသို့ ဆွဲဆန့်မခံရစေရန် */
+  .em-table td .em-grade-badge,
+  .em-table td .em-btn-delete {
+    flex: 0 0 auto !important; /* နေရာပိုမယူစေရန် တားမြစ်ခြင်း */
+    width: max-content !important; /* မိမိစာသားအရွယ်အစားအတိုင်းသာ ရှိစေခြင်း */
+    display: inline-block !important;
   }
 
   .em-table td:last-child { border-bottom: none; }
