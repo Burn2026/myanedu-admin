@@ -153,12 +153,14 @@ select.em-input {
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   border: 1px solid #e2e8f0;
-  overflow: hidden;
+  overflow-x: auto; /* ✅ ADDED: Tablet တွေမှာ ဘေးတိုက်ရွှေ့ကြည့်လို့ရအောင် */
+  -webkit-overflow-scrolling: touch; /* ✅ ADDED: iOS အတွက် Scroll ချောမွေ့စေရန် */
 }
 
 .em-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 800px; /* ✅ ADDED: Table အကျယ် အနည်းဆုံး 800px ထားမည် (စာမပူးကပ်စေရန်) */
 }
 
 .em-table thead {
@@ -220,6 +222,14 @@ select.em-input {
    📱 MOBILE RESPONSIVE 
    ========================================= */
 @media screen and (max-width: 768px) {
+  .em-table-wrapper {
+    overflow-x: hidden; /* ဖုန်းမှာ Card ပုံစံပြောင်းမည်ဖြစ်၍ Scroll ပိတ်မည် */
+  }
+
+  .em-table {
+    min-width: 100%; /* ဖုန်းမှာ 100% ပြန်ပြောင်းမည် */
+  }
+
   .em-table thead {
     display: none;
   }
@@ -241,10 +251,11 @@ select.em-input {
   .em-table td {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* စာသားများ အလယ်တည့်တည့်ဖြစ်စေရန် */
     padding: 12px 10px;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px dashed #f1f5f9; /* ပိုင်းခြားထားကြောင်း ပိုသိသာစေရန် */
     text-align: right;
+    gap: 10px; /* ✅ နေရာလွတ်ထားပေးရန် */
   }
 
   .em-table td::before {
@@ -254,12 +265,24 @@ select.em-input {
     font-size: 12px;
     text-transform: uppercase;
     text-align: left;
-    margin-right: 15px;
+    min-width: 90px; /* ✅ Label တွေ အကျယ်တူညီစေရန် */
+    flex-shrink: 0;
+  }
+
+  /* ✅ စာလုံးအရှည်ကြီးတွေ ပါလာရင် ကျုံ့သွား/အောက်ဆင်းသွားအောင် ပြုပြင်ခြင်း */
+  .em-table td > div, 
+  .em-table td > span,
+  .em-table td > button {
+    word-break: break-word;
+    text-align: right;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* ခလုတ်နဲ့ စာတွေကို ညာဘက်ကပ်စေရန် */
   }
 
   .em-table td:last-child {
     border-bottom: none;
-    justify-content: flex-end;
   }
   
   .em-btn-save {
